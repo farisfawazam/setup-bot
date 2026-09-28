@@ -9,7 +9,7 @@ import "dotenv/config";
 import http from "http";
 import { generateTemplate, reviseTemplate } from "./ai.js";
 import { saveTemplate, loadTemplate, listTemplates, deleteTemplate } from "./store.js";
-import { botsEmbed } from "./bots.js";
+import { botsEmbed, companionBotEmbed, companionBotActionRow } from "./bots.js";
 
 const client = new Client({
   intents: [
@@ -387,7 +387,7 @@ async function applyTemplate(guild, template, onProgress) {
       )
       .setColor(0x2ecc71);
     const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId("verify_btn").setLabel("✅ Verify & Pilih Role").setStyle(ButtonStyle.Success)
+      new ButtonBuilder().setCustomId(`verify_btn_${verifiedRole.id}`).setLabel("✅ Verify & Akses Server").setStyle(ButtonStyle.Success)
     );
     await verifyChannelRef.send({ embeds: [embed], components: [row] }).catch(() => {});
     log("  ✅ Verify button posted");
@@ -695,10 +695,29 @@ const pendingClears = new Map();
 client.on("interactionCreate", async (interaction) => {
   try {
     // ── Button: Verify + Show Self-Role Menu ──
-    if (interaction.isButton() && interaction.customId === "verify_btn") {
+    if (interaction.isButton() && (interaction.customId === "verify_btn" || interaction.customId.startsWith("verify_btn_"))) {
       await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       const guild = interaction.guild;
       const member = interaction.member;
+
+      // Locate verified role via ID or broad keyword matching
+      let verifiedRole = null;
+      if (interaction.customId.startsWith("verify_btn_")) {
+        const targetRoleId = interaction.customId.replace("verify_btn_", "");
+        verifiedRole = guild.roles.cache.get(targetRoleId);
+      }
+      if (!verifiedRole) {
+        verifiedRole = guild.roles.cache.find(
+          (r) =>
+            r.name.toLowerCase().includes("mahasiswa") ||
+            r.name.toLowerCase().includes("student") ||
+            r.name.toLowerCase().includes("member") ||
+            r.name.toLowerCase().includes("verified") ||
+            r.name.toLowerCase().includes("peserta") ||
+            r.name.toLowerCase().includes("warga") ||
+            r.name.toLowerCase().includes("siswa")
+        );
+      }
 
       // Check if user is staff/admin
       const isStaffOrAdmin = member.permissions.has(PermissionFlagsBits.Administrator) ||
@@ -716,27 +735,6 @@ client.on("interactionCreate", async (interaction) => {
       if (unverifiedRole && member.roles.cache.has(unverifiedRole.id)) {
         await member.roles.remove(unverifiedRole, "Verified").catch(() => {});
       }
-
-      // If user is staff/admin, do NOT add member role
-      if (isStaffOrAdmin) {
-        await interaction.editReply({
-          content: "✅ Status Staff/Admin terkonfirmasi! Role Unverified dilepas (Staff tidak memerlukan role Member).",
-        });
-        await botLog(guild, `🛡️ **${member.user.tag}** (Staff) verified`);
-        return;
-      }
-
-      const verifiedRole = guild.roles.cache.find(
-        (r) => r.name.toLowerCase().includes("member") || r.name.toLowerCase().includes("verified")
-      );
-      if (!verifiedRole) {
-        return interaction.editReply({ content: "❌ Verified role not found. Contact admin." });
-      }
-      if (member.roles.cache.has(verifiedRole.id)) {
-        return interaction.editReply({ content: "✅ Kamu sudah terverifikasi!" });
-      }
-
-      await member.roles.add(verifiedRole, "Self-verify").catch(() => {});
 
       // Find self-role menus and general chat to show clickable links
       const selfRoleCh = guild.channels.cache.find(
@@ -760,6 +758,28 @@ client.on("interactionCreate", async (interaction) => {
       if (generalCh) {
         extraMsg += `\n💬 Mulai ngobrol seru bareng member lain di <#${generalCh.id}>!`;
       }
+
+      if (!verifiedRole) {
+        return interaction.editReply({ content: "❌ Verified role not found. Contact admin." });
+      }
+
+      // If user is staff/admin, assign role too so they can access public category channels if their staff role lacks Admin perm
+      if (isStaffOrAdmin) {
+        if (!member.roles.cache.has(verifiedRole.id)) {
+          await member.roles.add(verifiedRole, "Staff verify & access").catch(() => {});
+        }
+        await interaction.editReply({
+          content: `✅ Status Staff/Admin terkonfirmasi! Role **${verifiedRole.name}** aktif & channel terbuka.${extraMsg}`,
+        });
+        await botLog(guild, `🛡️ **${member.user.tag}** (Staff) verified`);
+        return;
+      }
+
+      if (member.roles.cache.has(verifiedRole.id)) {
+        return interaction.editReply({ content: "✅ Kamu sudah terverifikasi!" });
+      }
+
+      await member.roles.add(verifiedRole, "Self-verify").catch(() => {});
 
       await interaction.editReply({
         content: `✅ Terverifikasi! Kamu dapat role **${verifiedRole.name}**.${extraMsg}\n\nSelamat bergabung di komunitas! 🎉`,
@@ -827,20 +847,22 @@ client.on("interactionCreate", async (interaction) => {
       appliedTemplates.set(interaction.guild.id, code);
 
       await interaction.editReply({
-        embeds: [makeEmbed("✅ Setup Selesai!", [
-          `📋 **${stats.roles}** roles`,
-          `📁 **${stats.categories}** categories`,
-          `📝 **${stats.channels}** channels`,
-          stats.verifiedRole ? `✅ Verified role: **${stats.verifiedRole}**` : "",
-          "", "**Auto-configured:**",
-          "🎭 Self-role menus", "✅ Verify button", "👋 Welcome & 📜 Rules embeds",
-          "⚙️ Server settings (notif: mentions only, verify: medium)",
-          "🛡️ Auto-mod (anti-spam, anti-mention)",
-          "➕ Temp voice channels",
-          "📝 Bot logging",
-          "", "💡 Ketik `/bots` untuk bot recommended!",
-        ].filter(Boolean).join("\n"), 0x2ecc71)],
-        components: [],
+        embeds: [
+          makeEmbed("✅ Setup Selesai!", [
+            `📋 **${stats.roles}** roles`,
+            `📁 **${stats.categories}** categories`,
+            `📝 **${stats.channels}** channels`,
+            stats.verifiedRole ? `✅ Verified role: **${stats.verifiedRole}**` : "",
+            "", "**Auto-configured:**",
+            "🎭 Self-role menus", "✅ Verify button", "👋 Welcome & 📜 Rules embeds",
+            "⚙️ Server settings (notif: mentions only, verify: medium)",
+            "🛡️ Auto-mod (anti-spam, anti-mention)",
+            "➕ Temp voice channels",
+            "📝 Bot logging",
+          ].filter(Boolean).join("\n"), 0x2ecc71),
+          companionBotEmbed(stats.verifiedRole),
+        ],
+        components: [companionBotActionRow()],
       }).catch((e) => console.error("editReply final setup:", e.message));
       return;
     }

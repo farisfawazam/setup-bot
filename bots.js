@@ -1,20 +1,18 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 
 export const recommendedBots = [
-  { name: "MEE6", desc: "Auto-mod, leveling, welcome", invite: "https://mee6.xyz/add", emoji: "🤖" },
-  { name: "Carl-bot", desc: "Reaction roles, logging, custom cmd", invite: "https://carl.gg/invite", emoji: "🔧" },
-  { name: "ProBot", desc: "Welcome image, auto-role, anti-raid", invite: "https://probot.io/invite", emoji: "🛡️" },
-  { name: "Jockie Music", desc: "Music player, multi-instance", invite: "https://discord.com/oauth2/authorize?client_id=411916947773587456&permissions=36702208&scope=bot", emoji: "🎵" },
-  { name: "Tatsu", desc: "Leveling, economy, profile cards", invite: "https://tatsu.gg/invite", emoji: "📊" },
-  { name: "GiveawayBot", desc: "Giveaway + timer + reroll", invite: "https://discord.com/oauth2/authorize?client_id=294882584201003009&permissions=76800&scope=bot", emoji: "🎉" },
-  { name: "Dyno", desc: "Moderation, auto-mod, logging", invite: "https://dyno.gg/invite", emoji: "⚡" },
-  { name: "Ticket Tool", desc: "Ticket system untuk support", invite: "https://tickettool.xyz/invite", emoji: "🎫" },
+  { name: "Carl-bot", desc: "Reaction roles 24/7, verify gate, logging", invite: "https://carl.gg/invite", emoji: "🔧" },
+  { name: "Dyno", desc: "Auto-roles saat join, auto-mod, moderation", invite: "https://dyno.gg/invite", emoji: "⚡" },
+  { name: "ProBot", desc: "Welcome image, auto-role 24/7, anti-raid", invite: "https://probot.io/invite", emoji: "🛡️" },
+  { name: "VoiceMaster", desc: "Temp voice channels (join-to-create) 24/7", invite: "https://discord.com/oauth2/authorize?client_id=472911936951156740&scope=bot&permissions=285215760", emoji: "🔊" },
+  { name: "MEE6", desc: "Auto-mod, leveling, custom commands", invite: "https://mee6.xyz/add", emoji: "🤖" },
+  { name: "Ticket Tool", desc: "Sistem tiket pengaduan / asistensi tugas", invite: "https://tickettool.xyz/invite", emoji: "🎫" },
 ];
 
 export function botsEmbed() {
   const embed = new EmbedBuilder()
-    .setTitle("🤖 Recommended Bots")
-    .setDescription("Klik link untuk invite ke server:")
+    .setTitle("🤖 Recommended 24/7 Companion Bots")
+    .setDescription("Bot rekomendasi untuk backup verify, role, dan temp voice saat bot utama offline:")
     .setColor(0x5865f2);
 
   for (const bot of recommendedBots) {
@@ -22,4 +20,50 @@ export function botsEmbed() {
   }
   embed.setFooter({ text: "Invite satu-satu, setup via dashboard masing-masing bot." });
   return embed;
+}
+
+export function companionBotEmbed(verifiedRoleName = "Member") {
+  return new EmbedBuilder()
+    .setTitle("🤖 Saran Bot Pendamping 24/7 (Verify & Role)")
+    .setDescription(
+      "Supaya sistem **Verify**, **Pilih Role**, dan **Temp Voice** tetap aktif 24 jam nonstop tanpa menunggu laptop kamu online, sangat disarankan menambahkan bot publik berikut:"
+    )
+    .addFields(
+      {
+        name: "1. 🔧 Carl-bot (Spesialis Verify & Reaction Roles 24/7)",
+        value:
+          `• **Untuk Verify**: Pasang reaction role di channel \`#✅verify\` agar member dapat role **${verifiedRoleName}** saat klik emoji/tombol.\n` +
+          "• **Untuk Dropdown/Pilih Kelas**: Pasang reaction role di \`#🎭pilih-kelas\` untuk pembagian kelompok/kelas paralel.",
+        inline: false,
+      },
+      {
+        name: "2. ⚡ Dyno / ProBot (Auto-Role Saat Join)",
+        value: "• Otomatis memberikan role saat mahasiswa baru join ke server.",
+        inline: false,
+      },
+      {
+        name: "3. 🔊 VoiceMaster (Temp Voice 24/7)",
+        value: "• Pengganti fitur \`➕create-room\` agar mahasiswa bisa buat ruang voice diskusi kapan saja.",
+        inline: false,
+      }
+    )
+    .setColor(0x3498db)
+    .setFooter({ text: "Klik tombol di bawah untuk invite bot pendamping langsung ke server dosen" });
+}
+
+export function companionBotActionRow() {
+  return new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setLabel("Invite Carl-bot (Verify & Role)")
+      .setStyle(ButtonStyle.Link)
+      .setURL("https://carl.gg/invite"),
+    new ButtonBuilder()
+      .setLabel("Invite Dyno (Auto-Role)")
+      .setStyle(ButtonStyle.Link)
+      .setURL("https://dyno.gg/invite"),
+    new ButtonBuilder()
+      .setLabel("Invite VoiceMaster (Temp VC)")
+      .setStyle(ButtonStyle.Link)
+      .setURL("https://discord.com/oauth2/authorize?client_id=472911936951156740&scope=bot&permissions=285215760")
+  );
 }
