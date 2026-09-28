@@ -1,4 +1,4 @@
-# 🤖 Setup Bot — Discord Server Template Generator
+# 🤖 Setup Bot — Discord Server Template Generator & 24/7 Companion Ecosystem
 
 Bot Discord AI canggih (via 9Router) untuk merancang, mengedit, menerapkan, dan membersihkan struktur server Discord bertaraf enterprise (10.000 - 50.000+ member) dalam hitungan detik.
 
@@ -6,64 +6,81 @@ Mendukung semua tema: **Gaming & Esports, Akademik / Kampus, Streamer / Content 
 
 ---
 
-## ⚡ Fitur Utama & Standar Enterprise V3
+## ⚡ Fitur Utama & Standar Enterprise V4
 
-- 🧠 **AI Server Architect 2-Step**: Merancang struktur server lengkap dari deskripsi bebas dengan piramida role 5-tier.
-- 📁 **Category-Sync Permissions**: Pengaturan izin diatur pada Kategori (Gate, Public, VIP, Staff). Channel otomatis tersinkronisasi (Synced) tanpa bentrok izin.
-- 👑 **Isolasi Role Staff & Admin**: Admin dan Staff tidak tercampur dengan role Member biasa. Profil tetap bersih dan badge teratur.
-- 🔊 **Voice User Limits & Temp VC**: Mendukung batas kuota room (Duo: 2, Squad: 5) serta sistem Join-to-Create (`➕create-room`) yang otomatis terhapus saat kosong.
-- 🎭 **Multi-Category Self-Roles**: Dropdown interaktif lengkap (Notifikasi Ping, Platform/Perangkat, Minat/Divisi Game, Warna Nametag).
-- 💡 **Auto Starter Guides**: Channel interaktif seperti `#suggestions` dan `#bot-commands` otomatis dilengkapi pesan panduan resmi dari bot.
-- 🔗 **Clickable Channel Mentions**: Setelah klik `✅ Verify`, bot langsung memberikan tautan biru interaktif (`#roles` & `#general-chat`) untuk memudahkan onboarding member baru.
-- 🛡️ **Auto-Mod 3 Lapis (Anti-Spam, Anti-Mention, Anti-Scam)**: Proteksi otomatis terhadap spam chat, mention massal, dan phishing link/fake nitro, dengan pengecualian khusus untuk tim Staff.
+- 🧠 **AI Server Architect 2-Step**: Merancang struktur server lengkap dari deskripsi bebas dengan piramida role 5-tier (Staff -> VIP -> Base Member -> Self-Roles -> Unverified).
+- 📁 **Category-Sync Permissions**: Pengaturan izin diatur pada level Kategori (`gate`, `public`, `staff`, `vip`). Channel otomatis mewarisi izin (Status: **Synced**) tanpa bentrok atau rate limit.
+- 🏛️ **Role-Specific Category Isolation**: Deteksi cerdas nama kategori terhadap self-role (misal: `KELAS IF - 2 - KA` vs `KELAS IF - 2 - KM`). Kategori kelas/kelompok otomatis dikunci khusus pemegang role tersebut (+ Dosen/Staff).
+- 👑 **Isolasi Role Staff & Admin**: Admin dan Staff tidak tercampur dengan role Member biasa. Bebas badge berantakan di profil.
+- ⚡ **Auto-Role & Auto-Strip Unverified**:
+  - Member baru otomatis diberi role unverified saat bergabung.
+  - Saat member menyelesaikan verifikasi (baik via tombol bot atau Carl-bot), role unverified **otomatis dicopot** seketika (`guildMemberUpdate`).
+- 🤖 **24/7 Companion Bot Ecosystem**:
+  - Selesai setup, bot otomatis menampilkan rekomendasi dan tombol invite bot 24/7 (Carl-bot, Dyno, VoiceMaster).
+  - Tombol interaktif **`📖 Panduan Setup 24/7`** langsung menyajikan panduan setup (tanpa perlu setting manual rumit).
+  - Role bot otomatis diberi izin `EmbedLinks`, `SendMessages`, dan `AddReactions` di channel gate agar Carl-bot tidak terblokir.
+- 🔊 **Voice User Limits & Temp VC (Join-to-Create)**: Mendukung batas kuota room (Duo: 2, Squad: 5) serta integrasi Join-to-Create bawaan & VoiceMaster 24/7.
+- 🎭 **Multi-Category Self-Roles**: Dropdown interaktif lengkap (Single-choice & Multi-choice) untuk pembagian kelompok, kelas, atau identitas.
+- 🛡️ **Auto-Mod 3 Lapis (Anti-Spam, Anti-Mention, Anti-Scam)**: Proteksi otomatis terhadap spam chat, mention massal (max 5), dan phishing link/fake nitro, dengan bypass khusus untuk tim Staff.
 
 ---
 
-## 📋 Daftar Command
+## 📋 Daftar Slash Command
 
 | Command | Parameter | Fungsi | Izin |
 |---|---|---|---|
-| `/generate` | `deskripsi` | Merancang template server baru dengan AI | Semua Member |
-| `/revise` | `kode`, `feedback` | Merevisi template yang sudah ada dengan catatan spesifik | Semua Member |
-| `/setup` | `kode` | Menampilkan pratinjau & tombol apply ke server | Administrator |
-| `/clear-setup` | `kode` | Menghapus channel, role, dan auto-mod milik template | Administrator |
-| `/templates` | - | Melihat daftar template yang tersimpan | Semua Member |
-| `/delete-template` | `kode` | Menghapus template dari penyimpanan bot | Semua Member |
-| `/bots` | - | Menampilkan rekomendasi bot pelengkap server | Semua Member |
+| `/generate` | `deskripsi` | Merancang template server baru dengan AI | Bot Owner & Administrator |
+| `/revise` | `kode`, `feedback` | Merevisi template yang sudah ada dengan catatan spesifik | Bot Owner & Administrator |
+| `/setup` | `kode` | Menampilkan pratinjau & tombol apply ke server | Bot Owner & Administrator |
+| `/clear-setup` | `kode` | Menghapus channel, role, dan auto-mod milik template | Bot Owner & Administrator |
+| `/templates` | - | Melihat daftar template yang tersimpan | Bot Owner & Administrator |
+| `/delete-template` | `kode` | Menghapus template dari penyimpanan bot (dukung `kode:all`) | Bot Owner & Administrator |
+| `/bots` | - | Menampilkan bot rekomendasi 24/7 & panduan setup | Semua Member |
 
 ---
 
-## 🚀 Panduan Penggunaan
+## 🚀 Panduan Penggunaan Cepat
 
 ### 1. Generate Template Baru
-Ketik slash command di Discord:
+```text
+/generate deskripsi:bikin server untuk matkul web project, matkul ini hanya untuk 2 kelas saja yaitu IF - 2 - KA dan IF - 2 - KM
 ```
-/generate deskripsi:server esport mobile legends dan pubg mobile indonesia dengan scrim harian, open recruit, clip montage, dan mabar
-```
-Bot akan membalas dengan ringkasan struktur server dan memberikan **Kode Template 6 Karakter** (misal: `A8F2K9`).
+Bot akan membalas dengan ringkasan struktur server dan memberikan **Kode Template 6 Karakter** (misal: `ZU8XNY`).
 
 ### 2. Revisi Template (Opsional)
-Jika ingin mengubah atau menambahkan hal baru:
+```text
+/revise kode:ZU8XNY feedback:pisahkan section antar kelas dan rapikan channel voice
 ```
-/revise kode:A8F2K9 feedback:tambahkan kategori turnamen mingguan dan kurangi channel voice
-```
-Bot akan menghasilkan kode template baru hasil revisi.
 
 ### 3. Terapkan ke Server (`/setup`)
-Jalankan di server yang ingin ditata:
+```text
+/setup kode:ZU8XNY
 ```
-/setup kode:A8F2K9
-```
-Bot akan memvalidasi kondisi server dan menampilkan ringkasan beserta tombol:
-- Klik **✅ Apply Setup** untuk memulai pembuatan role, izin, kategori, dan channel.
-- Klik **❌ Cancel** untuk membatalkan.
+Klik tombol hijau **✅ Apply Setup**. Bot akan membuat seluruh role, channel, izin sinkron, embed panduan, dan auto-mod dalam ~1 menit.
 
-### 4. Reset Server (`/clear-setup`)
-Jika ingin membersihkan template yang pernah dibuat:
-```
-/clear-setup kode:A8F2K9
-```
-Konfirmasi dengan mengklik tombol **🗑️ Clear Everything**.
+---
+
+## 🤖 Menjalankan Server 24/7 Tanpa Laptop Nyala
+
+Setelah `/setup` selesai, server siap dijalankan 24/7 menggunakan bot pendamping gratis:
+
+1. **Carl-bot (Verify & Pembagian Kelas 24/7)**:
+   - Verify Gate di `#✅verify`:
+     ```text
+     !rr aio #✅verify #2ecc71 "Verifikasi Mahasiswa | Klik ✅ untuk membuka akses kuliah"
+     ✅ @✅ Mahasiswa
+     ```
+   - Kunci 1 Kelas di `#🎭pilih-role`:
+     ```text
+     !rr aiou #🎭pilih-role #3498db "Pilih Kelas | Pilih kelas paralel yang kamu ambil"
+     💻 @🎓 IF - 2 - KA
+     🖥️ @🎓 IF - 2 - KM
+     ```
+   - Auto-role saat join: `!autorole add @⏳ Belum Verifikasi`
+
+2. **VoiceMaster (Temp Voice 24/7)**:
+   - Ketik `/setup default` di Discord.
+   - Masukkan parameter: `editable: True`, `category: RUANG SUARA & MEET`, `permission: category`.
 
 ---
 
@@ -72,7 +89,7 @@ Konfirmasi dengan mengklik tombol **🗑️ Clear Everything**.
 ### 1. Prasyarat
 - Node.js versi 20 atau lebih tinggi
 - 9Router aktif (port `20128`) dengan model `ag/gemini-3.8-flash`
-- Akun Bot Discord dari Discord Developer Portal
+- Token Bot Discord dari Discord Developer Portal
 
 ### 2. Konfigurasi Bot di Discord Developer Portal
 Pastikan bot mengaktifkan seluruh **Privileged Gateway Intents**:
@@ -86,13 +103,13 @@ Berikan izin **Administrator** pada invite link bot, dan pastikan di server Disc
 ```env
 DISCORD_TOKEN=your_bot_token_here
 NINEROUTER_URL=http://localhost:20128
-NINEROUTER_KEY=your_9router_key_if_any
+NINEROUTER_KEY=sk-xxxx
 AI_MODEL=ag/gemini-3.8-flash
 ```
 
 ### 4. Menjalankan Bot
 ```bash
-# Deploy slash commands
+# Register slash commands
 node deploy-commands.js
 
 # Jalankan bot

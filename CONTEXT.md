@@ -137,24 +137,32 @@ C:\Users\User\setup-bot\
 
 ### 1. Piramida Role 5-Tier & Isolasi Staff
 - **Staff (Tier 1)**: Owner -> Head Admin -> Moderator. Moderator tidak memiliki izin `Administrator`, hanya izin moderasi (`ManageMessages`, `MuteMembers`, `MoveMembers`).
-- **Isolasi Akun Staff**: Akun staff/admin tidak diberi role `Member` saat verifikasi.
-- **Member Join**: Akun bot dan akun staff dikecualikan dari role `Unverified`.
+- **Isolasi Akun Staff**: Akun staff/admin dipisahkan dari role Member umum, namun saat klik tombol verify bot tetap memberi role verified untuk keperluan testing/akses channel.
+- **Member Join & Auto-Role**: Akun bot dan staff dikecualikan dari role `Unverified`. Member umum otomatis ditempel role unverified saat bergabung.
+- **Auto-Strip Unverified (`guildMemberUpdate`)**: Saat member mendapatkan role terverifikasi (dari tombol verifikasi bot atau Carl-bot), bot otomatis mencopot role unverified.
 
-### 2. Category-Sync Permission Engine
+### 2. Category-Sync Permission Engine & Role Isolation
 - Pengaturan izin diatur di level Kategori (`gate`, `public`, `staff`, `vip`).
 - Channel mewarisi izin kategori secara otomatis (status **Synced** di UI Discord).
+- **Role-Specific Category Isolation**: Nama kategori secara otomatis dicocokkan dengan nama self-role (misal: `KELAS IF - 2 - KA` vs `KELAS IF - 2 - KM`). Kategori yang cocok otomatis dikunci khusus untuk pemegang role tersebut (+ Dosen/Staff) dan menutup akses role verified umum.
+- Role companion bot otomatis diberi izin `EmbedLinks`, `SendMessages`, dan `AddReactions` di kategori gate & `#✅verify` agar tidak terhalang saat bertugas.
 - Dilengkapi jeda `sleep(250)` per pembuatan channel untuk proteksi Discord 429.
 
-### 3. Voice User Limits & Temp VC (Join-to-Create)
+### 3. Companion Bot Ecosystem (24/7 Gratis)
+- Menghadirkan bot eksternal (Carl-bot, Dyno, VoiceMaster) agar server berjalan 24/7 tanpa perlu laptop host online terus-menerus.
+- Selesai setup, bot langsung mengirimkan embed rekomendasi companion bot lengkap dengan action row tombol invite direct URL dan tombol interaktif `📖 Panduan Setup 24/7`.
+
+### 4. Voice User Limits & Temp VC (Join-to-Create)
 - Voice room mendukung `userLimit` presisi (Duo: 2, Trio: 3, Squad: 4/5, Lounge: 0).
 - Channel `➕create-room` otomatis membuat private room bagi user dan menghapusnya saat kosong.
+- Dilengkapi integrasi VoiceMaster (`/setup default`) untuk persistensi 24/7.
 - Dilengkapi null-guard fetch member jika cache voice Discord kosong.
 
-### 4. Interactive Channel Starter Guides & Clickable Mentions
+### 5. Interactive Channel Starter Guides & Clickable Mentions
 - Channel `#suggestions` dan `#bot-commands` otomatis dikirimi embed panduan penggunaan saat setup selesai.
-- Tombol `✅ Verify` membalas dengan mention link channel biru interaktif (`<#channelId>`) mengarahkan langsung ke channel roles dan general chat.
+- Tombol `✅ Verify` menggunakan dynamic role binding (`verify_btn_<roleId>`) dengan fallback regex keyword, dan membalas dengan mention link channel biru interaktif (`<#channelId>`) mengarahkan langsung ke channel roles dan general chat.
 
-### 5. Auto-Mod 3 Lapis & Staff Exemption
+### 6. Auto-Mod 3 Lapis & Staff Exemption
 - `Setup Bot: Anti-Spam`
 - `Setup Bot: Anti-Mention` (maksimal 5 mention)
 - `Setup Bot: Anti-Scam` (keyword filter untuk free nitro, steam gift, crypto scam)

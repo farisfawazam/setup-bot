@@ -1,0 +1,259 @@
+{
+  "code": "ZU8XNY",
+  "description": "bikin server untuk matkul web project, matkul ini hanya untuk 2 kelas saja yaitu IF - 2 - KA, dan IF - 2 - KM,  server cukup untuk meet , chat , bahas tugas, dan sebagainya jangan terlalu kompleks [revised: mending di pindah section antar kelas...]",
+  "template": {
+    "roles": [
+      {
+        "name": "👑 Dosen / Asisten",
+        "color": "#e74c3c",
+        "permissions": [
+          "Administrator"
+        ],
+        "hoist": true,
+        "isStaff": true
+      },
+      {
+        "name": "✅ Mahasiswa",
+        "color": "#2ecc71",
+        "permissions": [
+          "ViewChannel",
+          "SendMessages"
+        ],
+        "hoist": true,
+        "isVerified": true
+      },
+      {
+        "name": "⏳ Belum Verifikasi",
+        "color": "#7f8c8d",
+        "permissions": [],
+        "hoist": false,
+        "isUnverified": true
+      }
+    ],
+    "selfRoles": [
+      {
+        "category": "🎓 Kelas Mahasiswa",
+        "description": "Pilih kelas sesuai jadwal perkuliahan",
+        "singleChoice": true,
+        "roles": [
+          {
+            "name": "🎓 IF - 2 - KA",
+            "color": "#3498db",
+            "emoji": "💻"
+          },
+          {
+            "name": "🎓 IF - 2 - KM",
+            "color": "#9b59b6",
+            "emoji": "🖥️"
+          }
+        ]
+      }
+    ],
+    "categories": [
+      {
+        "name": "╔═══ 📌 PUSAT INFORMASI ═══╗",
+        "access": "gate",
+        "channels": [
+          {
+            "name": "📜rules",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Aturan kelas dan tata tertib perkuliahan",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "📢pengumuman",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Informasi tugas, deadline, dan kuliah",
+            "slowmode": 0
+          },
+          {
+            "name": "✅verify",
+            "type": "text",
+            "isVerifyChannel": true,
+            "topic": "Verifikasi akun mahasiswa",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "🎭pilih-role",
+            "type": "text",
+            "isSelfRolesChannel": true,
+            "readOnly": true,
+            "topic": "Pilih kelas IF-2-KA atau IF-2-KM",
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 💬 DISKUSI UMUM ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬general-chat",
+            "type": "text",
+            "topic": "Obrolan santai",
+            "slowmode": 0
+          },
+          {
+            "name": "❓tanya-jawab-tugas",
+            "type": "text",
+            "topic": "Diskusi error dan materi tugas",
+            "slowmode": 5
+          },
+          {
+            "name": "📁materi-referensi",
+            "type": "text",
+            "topic": "Share link repo, doc, dan PDF",
+            "slowmode": 0
+          },
+          {
+            "name": "🤖bot-commands",
+            "type": "text",
+            "topic": "Command bot",
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 💻 KELAS IF - 2 - KA ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬diskusi-ka",
+            "type": "text",
+            "topic": "Ruang diskusi khusus kelas IF-2-KA",
+            "slowmode": 0
+          },
+          {
+            "name": "📁tugas-ka",
+            "type": "text",
+            "topic": "Informasi dan submit materi IF-2-KA",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊Study Room KA",
+            "type": "voice",
+            "userLimit": 15,
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 🖥️ KELAS IF - 2 - KM ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬diskusi-km",
+            "type": "text",
+            "topic": "Ruang diskusi khusus kelas IF-2-KM",
+            "slowmode": 0
+          },
+          {
+            "name": "📁tugas-km",
+            "type": "text",
+            "topic": "Informasi dan submit materi IF-2-KM",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊Study Room KM",
+            "type": "voice",
+            "userLimit": 15,
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 🔊 RUANG SUARA & MEET ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "➕create-room",
+            "type": "voice",
+            "isTempVoiceGenerator": true,
+            "topic": "Masuk untuk otomatis membuat voice room privat",
+            "slowmode": 0
+          },
+          {
+            "name": "📢Ruang Kuliah Umum",
+            "type": "voice",
+            "userLimit": 0,
+            "slowmode": 0
+          },
+          {
+            "name": "🔊Diskusi Kelompok 1",
+            "type": "voice",
+            "userLimit": 5,
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "🔊Diskusi Kelompok 2",
+            "type": "voice",
+            "userLimit": 5,
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          }
+        ]
+      },
+      {
+        "name": "╚═══ 🛡️ STAFF HQ ═══╝",
+        "access": "staff",
+        "channels": [
+          {
+            "name": "🔒mod-chat",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Koordinasi materi dan nilai",
+            "slowmode": 0
+          },
+          {
+            "name": "🤖bot-log",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Log audit sistem dan aktivitas",
+            "slowmode": 0
+          }
+        ]
+      }
+    ],
+    "welcomeEmbed": {
+      "title": "Selamat Datang di Discord Kelas!",
+      "description": "Ikuti langkah berikut untuk memulai perkuliahan:",
+      "color": "#5865f2",
+      "fields": [
+        {
+          "name": "1️⃣ Ganti Nama Server",
+          "value": "Ubah nickname server ke format: NIM - Nama Lengkap.",
+          "inline": false
+        },
+        {
+          "name": "2️⃣ Verifikasi & Pilih Kelas",
+          "value": "Verifikasi di verify lalu pilih role kelas di pilih-role.",
+          "inline": false
+        },
+        {
+          "name": "3️⃣ Baca Tata Tertib",
+          "value": "Patuhi seluruh peraturan di channel rules.",
+          "inline": false
+        }
+      ]
+    },
+    "rulesEmbed": {
+      "title": "📜 Tata Tertib & Peraturan Kelas",
+      "description": "Patuhi aturan berikut demi kelancaran kegiatan belajar mengajar:",
+      "color": "#e74c3c",
+      "rules": [
+        "Ganti nama server dengan format: NIM - Nama Lengkap.",
+        "Hormati dosen, asisten, dan sesama mahasiswa.",
+        "Dilarang copas total tugas (kode terdeteksi plagiat bernilai 0).",
+        "Gunakan channel sesuai fungsi (tanya error kodingan di tanya-jawab-tugas).",
+        "Mute mikrofon saat dosen atau pemateri sedang presentasi.",
+        "Sanksi pelanggaran bertingkat: Peringatan → Mute 24 Jam → Kick/Ban."
+      ]
+    }
+  },
+  "createdAt": "2026-09-28T08:14:44.231Z"
+}
