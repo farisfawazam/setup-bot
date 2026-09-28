@@ -771,7 +771,11 @@ client.on("guildMemberAdd", async (member) => {
 
     // Auto-assign unverified role
     const unverifiedRole = member.guild.roles.cache.find(
-      (r) => r.name.toLowerCase().includes("unverified") || r.name.toLowerCase().includes("belum verify")
+      (r) =>
+        r.name.toLowerCase().includes("unverified") ||
+        r.name.toLowerCase().includes("unverify") ||
+        r.name.toLowerCase().includes("belum") ||
+        r.name.toLowerCase().includes("not verified")
     );
     if (unverifiedRole) {
       await member.roles.add(unverifiedRole, "Auto-role on join").catch(() => {});
@@ -899,7 +903,11 @@ client.on("interactionCreate", async (interaction) => {
 
       // Remove unverified role if exists
       const unverifiedRole = guild.roles.cache.find(
-        (r) => r.name.toLowerCase().includes("unverified") || r.name.toLowerCase().includes("belum verify")
+        (r) =>
+          r.name.toLowerCase().includes("unverified") ||
+          r.name.toLowerCase().includes("unverify") ||
+          r.name.toLowerCase().includes("belum") ||
+          r.name.toLowerCase().includes("not verified")
       );
       if (unverifiedRole && member.roles.cache.has(unverifiedRole.id)) {
         await member.roles.remove(unverifiedRole, "Verified").catch(() => {});
