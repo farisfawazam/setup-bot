@@ -74,48 +74,52 @@ export function companionBotActionRow() {
 
 export function carlBotGuideEmbed() {
   return new EmbedBuilder()
-    .setTitle("📖 Panduan Singkat Setup Bot 24/7")
-    .setDescription("Ikuti langkah berikut agar server bisa jalan otomatis selamanya tanpa laptop kamu nyala:")
+    .setTitle("📖 Panduan Lengkap Setup Bot Pendamping 24/7")
+    .setDescription("Server sudah disiapkan dengan sistem Category-Sync & permission yang kompatibel 100% dengan bot di bawah:")
     .addFields(
       {
-        name: "0️⃣ Urutan Role (Wajib)",
-        value: "Masuk ke **Server Settings** → **Roles** → Geser role **Carl-bot** ke posisi paling atas (di bawah role Owner/Admin).",
+        name: "0️⃣ Urutan Role Discord (PENTING)",
+        value: "Masuk ke **Server Settings** → **Roles** → Geser role **Carl-bot** ke posisi paling atas (di bawah role Dosen/Admin). Carl-bot tidak bisa memberi role jika posisinya berada di bawah role Mahasiswa.",
         inline: false,
       },
       {
-        name: "1️⃣ Pasang Verify 24/7 di #✅verify (Carl-bot)",
+        name: "1️⃣ Verify Gate 24/7 di #✅verify (Carl-bot)",
         value:
-          "1. Buka channel `#✅verify`\n" +
-          "2. Ketik: `!rr make`\n" +
-          "3. Saat ditanya channel, ketik: `#✅verify`\n" +
-          "4. Saat ditanya judul/pesan, ketik:\n" +
-          "   `Verifikasi Mahasiswa | Klik emoji di bawah untuk membuka akses server!`\n" +
-          "5. Saat ditanya warna hex, ketik: `#2ecc71`\n" +
-          "6. Saat ditanya emoji & role, ketik:\n" +
-          "   `✅ @🎓 Mahasiswa`\n" +
-          "7. Ketik: `done`",
+          "1. Buka channel `#✅verify` lalu ketik: `!rr make`\n" +
+          "2. Channel target: ketik `#✅verify`\n" +
+          "3. Judul: `Verifikasi Mahasiswa | Klik ✅ untuk membuka akses kuliah`\n" +
+          "4. Warna: `#2ecc71`\n" +
+          "5. Emoji & Role: ketik `✅ @🎓 Mahasiswa` lalu `done`\n" +
+          "6. **Set Type Verify**: ketik `!rr type 4` (agar sekali klik langsung terverifikasi permanen walau un-react).",
         inline: false,
       },
       {
-        name: "2️⃣ Pasang Pemilihan Kelas di #🎭pilih-kelas (Carl-bot)",
+        name: "2️⃣ Dropdown / Pilih Kelas di #🎭pilih-kelas (Carl-bot)",
         value:
-          "1. Buka channel `#🎭pilih-kelas`\n" +
-          "2. Ketik: `!rr make`\n" +
-          "3. Ikuti alurnya, masukkan emoji dan role masing-masing kelas:\n" +
+          "1. Buka channel `#🎭pilih-kelas` lalu ketik: `!rr make`\n" +
+          "2. Masukkan opsi kelas:\n" +
           "   `🏷️ @🏷️ IF-2-KA`\n" +
-          "   `🏷️ @🏷️ IF-2-KM`\n" +
-          "4. Ketik: `done`",
+          "   `🔖 @🏷️ IF-2-KM`\n" +
+          "3. Ketik `done` lalu ketik `!rr type 2` (Unique Mode: mahasiswa hanya bisa memilih salah satu kelas).",
         inline: false,
       },
       {
-        name: "3️⃣ Pasang Temp Voice 24/7 (VoiceMaster)",
+        name: "3️⃣ Auto-Role Member Baru (Dyno)",
+        value:
+          "1. Buka dashboard `dyno.gg` → pilih server\n" +
+          "2. Masuk ke tab **Modules** → **Autoroles**\n" +
+          "3. Tambahkan role: **⏳ Unverified** (agar tiap akun baru otomatis dapat role unverified saat pertama kali join).",
+        inline: false,
+      },
+      {
+        name: "4️⃣ Temp Voice 24/7 (VoiceMaster)",
         value:
           "1. Invite VoiceMaster lewat tombol di atas\n" +
           "2. Ketik `/setup` di channel chat\n" +
-          "3. VoiceMaster otomatis membuat channel `Join to Create` 24 jam nonstop.",
+          "3. Pilih `#➕create-room` sebagai channel Join to Create.",
         inline: false,
       }
     )
     .setColor(0x2ecc71)
-    .setFooter({ text: "Sistem Discord native • 100% gratis • 24/7 tanpa perlu laptop nyala" });
+    .setFooter({ text: "Sistem Category-Sync • 100% Synced • Siap pakai 24/7" });
 }

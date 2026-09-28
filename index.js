@@ -101,19 +101,43 @@ async function applyTemplate(guild, template, onProgress) {
   // 1. Create main roles (reuse existing by name)
   log("📋 Creating roles...");
   await guild.roles.fetch();
+  const defaultVerifiedPerms = [
+    PermissionFlagsBits.ViewChannel,
+    PermissionFlagsBits.SendMessages,
+    PermissionFlagsBits.EmbedLinks,
+    PermissionFlagsBits.AttachFiles,
+    PermissionFlagsBits.ReadMessageHistory,
+    PermissionFlagsBits.AddReactions,
+    PermissionFlagsBits.UseExternalEmojis,
+    PermissionFlagsBits.Connect,
+    PermissionFlagsBits.Speak,
+    PermissionFlagsBits.Stream,
+    PermissionFlagsBits.UseVAD,
+  ];
+
   for (const roleDef of template.roles || []) {
     const existing = guild.roles.cache.find((r) => r.name === roleDef.name && !r.managed);
     if (existing) {
       createdRoles[roleDef.name] = existing;
-      if (roleDef.isVerified) verifiedRole = existing;
+      if (roleDef.isVerified) {
+        verifiedRole = existing;
+        await existing.setPermissions(defaultVerifiedPerms, "Setup Bot update perms").catch(() => {});
+      }
       if (roleDef.isUnverified) unverifiedRole = existing;
       if (roleDef.isStaff) staffRoleList.push(existing);
       log(`  ♻️ Reused: ${roleDef.name}`);
       continue;
     }
-    const perms = new PermissionsBitField(
-      (roleDef.permissions || []).map((p) => PermissionFlagsBits[p]).filter(Boolean)
-    );
+    let perms;
+    if (roleDef.isVerified) {
+      perms = new PermissionsBitField(defaultVerifiedPerms);
+    } else if (roleDef.permissions && roleDef.permissions.length > 0) {
+      perms = new PermissionsBitField(
+        roleDef.permissions.map((p) => PermissionFlagsBits[p]).filter(Boolean)
+      );
+    } else {
+      perms = new PermissionsBitField();
+    }
     const role = await guild.roles.create({
       name: roleDef.name,
       colors: { primaryColor: parseColor(roleDef.color) },
@@ -189,6 +213,36 @@ async function applyTemplate(guild, template, onProgress) {
   let logChannelRef = null;
   let tempVcGeneratorRef = null;
 
+  const standardMemberPerms = [
+    PermissionFlagsBits.ViewChannel,
+    PermissionFlagsBits.SendMessages,
+    PermissionFlagsBits.ReadMessageHistory,
+    PermissionFlagsBits.EmbedLinks,
+    PermissionFlagsBits.AttachFiles,
+    PermissionFlagsBits.AddReactions,
+    PermissionFlagsBits.UseExternalEmojis,
+    PermissionFlagsBits.Connect,
+    PermissionFlagsBits.Speak,
+    PermissionFlagsBits.Stream,
+    PermissionFlagsBits.UseVAD,
+  ];
+
+  const standardStaffPerms = [
+    PermissionFlagsBits.ViewChannel,
+    PermissionFlagsBits.SendMessages,
+    PermissionFlagsBits.ReadMessageHistory,
+    PermissionFlagsBits.EmbedLinks,
+    PermissionFlagsBits.AttachFiles,
+    PermissionFlagsBits.AddReactions,
+    PermissionFlagsBits.Connect,
+    PermissionFlagsBits.Speak,
+    PermissionFlagsBits.Stream,
+    PermissionFlagsBits.UseVAD,
+    PermissionFlagsBits.ManageMessages,
+    PermissionFlagsBits.MuteMembers,
+    PermissionFlagsBits.MoveMembers,
+  ];
+
   const vipRole = Object.values(createdRoles).find(
     (r) => r.name.toLowerCase().includes("vip") || r.name.toLowerCase().includes("booster")
   );
@@ -197,17 +251,55 @@ async function applyTemplate(guild, template, onProgress) {
     const catAccess = cat.access || "public";
     const catOverwrites = [];
 
+    // Check if category name matches a specific self-role (e.g. "KELAS IF - 2 - KA" -> role "🏷️ IF-2-KA" or "KELOMPOK 1")
+    let matchedSelfRole = null;
+    const catNameClean = cat.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    for (const sr of Object.values(selfRoleMap).flat()) {
+      const roleNameClean = sr.role.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (roleNameClean.length >= 3 && catNameClean.includes(roleNameClean)) {
+        matchedSelfRole = sr.role;
+        break;
+      }
+    }
+
     if (catAccess === "gate") {
       catOverwrites.push({
         id: guild.roles.everyone.id,
-        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory],
-        deny: [PermissionFlagsBits.SendMessages],
+        allow: [
+          PermissionFlagsBits.ViewChannel,
+          PermissionFlagsBits.ReadMessageHistory,
+          PermissionFlagsBits.AddReactions,
+        ],
+        deny: [
+          PermissionFlagsBits.SendMessages,
+          PermissionFlagsBits.CreatePublicThreads,
+          PermissionFlagsBits.CreatePrivateThreads,
+          PermissionFlagsBits.SendMessagesInThreads,
+        ],
       });
       if (verifiedRole) {
         catOverwrites.push({
           id: verifiedRole.id,
-          allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory],
+          allow: [
+            PermissionFlagsBits.ViewChannel,
+            PermissionFlagsBits.ReadMessageHistory,
+            PermissionFlagsBits.AddReactions,
+          ],
+          deny: [
+            PermissionFlagsBits.SendMessages,
+            PermissionFlagsBits.CreatePublicThreads,
+            PermissionFlagsBits.CreatePrivateThreads,
+            PermissionFlagsBits.SendMessagesInThreads,
+          ],
         });
+      }
+      for (const sr of staffRoleList) {
+        if (!sr.permissions.has(PermissionFlagsBits.Administrator)) {
+          catOverwrites.push({
+            id: sr.id,
+            allow: standardStaffPerms,
+          });
+        }
       }
     } else if (catAccess === "staff") {
       catOverwrites.push({
@@ -224,7 +316,31 @@ async function applyTemplate(guild, template, onProgress) {
         if (!sr.permissions.has(PermissionFlagsBits.Administrator)) {
           catOverwrites.push({
             id: sr.id,
-            allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory],
+            allow: standardStaffPerms,
+          });
+        }
+      }
+    } else if (matchedSelfRole) {
+      // Role-specific category (e.g. Kelas / Kelompok channel)
+      catOverwrites.push({
+        id: guild.roles.everyone.id,
+        deny: [PermissionFlagsBits.ViewChannel],
+      });
+      if (verifiedRole) {
+        catOverwrites.push({
+          id: verifiedRole.id,
+          deny: [PermissionFlagsBits.ViewChannel],
+        });
+      }
+      catOverwrites.push({
+        id: matchedSelfRole.id,
+        allow: standardMemberPerms,
+      });
+      for (const sr of staffRoleList) {
+        if (!sr.permissions.has(PermissionFlagsBits.Administrator)) {
+          catOverwrites.push({
+            id: sr.id,
+            allow: standardStaffPerms,
           });
         }
       }
@@ -235,7 +351,7 @@ async function applyTemplate(guild, template, onProgress) {
       });
       catOverwrites.push({
         id: vipRole.id,
-        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory],
+        allow: standardMemberPerms,
       });
     } else {
       // Default: "public"
@@ -246,7 +362,7 @@ async function applyTemplate(guild, template, onProgress) {
       if (verifiedRole) {
         catOverwrites.push({
           id: verifiedRole.id,
-          allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory],
+          allow: standardMemberPerms,
         });
       }
     }
@@ -269,10 +385,25 @@ async function applyTemplate(guild, template, onProgress) {
       if (ch.isVerifyChannel) {
         channelOverwrites.push({
           id: guild.roles.everyone.id,
-          allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory],
-          deny: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.AddReactions],
+          allow: [
+            PermissionFlagsBits.ViewChannel,
+            PermissionFlagsBits.ReadMessageHistory,
+            PermissionFlagsBits.AddReactions,
+          ],
+          deny: [PermissionFlagsBits.SendMessages],
         });
-      } else if (ch.readOnly) {
+        if (verifiedRole) {
+          channelOverwrites.push({
+            id: verifiedRole.id,
+            allow: [
+              PermissionFlagsBits.ViewChannel,
+              PermissionFlagsBits.ReadMessageHistory,
+              PermissionFlagsBits.AddReactions,
+            ],
+            deny: [PermissionFlagsBits.SendMessages],
+          });
+        }
+      } else if (ch.readOnly && catAccess !== "gate") {
         channelOverwrites.push({
           id: guild.roles.everyone.id,
           deny: [PermissionFlagsBits.SendMessages],
