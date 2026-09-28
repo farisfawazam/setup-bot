@@ -74,52 +74,53 @@ export function companionBotActionRow() {
 
 export function carlBotGuideEmbed() {
   return new EmbedBuilder()
-    .setTitle("📖 Panduan Lengkap Setup Bot Pendamping 24/7")
-    .setDescription("Server sudah disiapkan dengan sistem Category-Sync & permission yang kompatibel 100% dengan bot di bawah:")
+    .setTitle("📖 Panduan Setup Bot 24/7 (Tanpa Prefix / Web GUI)")
+    .setDescription("Discord bot modern memakai Dashboard Web atau Slash Command `/` (tanpa prefix `!` atau `?`):")
     .addFields(
       {
-        name: "0️⃣ Urutan Role Discord (PENTING)",
-        value: "Masuk ke **Server Settings** → **Roles** → Geser role **Carl-bot** ke posisi paling atas (di bawah role Dosen/Admin). Carl-bot tidak bisa memberi role jika posisinya berada di bawah role Mahasiswa.",
+        name: "0️⃣ Urutan Role (PENTING)",
+        value: "Buka **Server Settings** → **Roles** → Geser role **Carl-bot** & **Dyno** ke posisi atas di bawah role Admin.",
         inline: false,
       },
       {
-        name: "1️⃣ Verify Gate 24/7 di #✅verify (Carl-bot)",
+        name: "1️⃣ Verify Gate di #✅verify (Dashboard carl.gg)",
         value:
-          "1. Buka channel `#✅verify` lalu ketik: `!rr make`\n" +
-          "2. Channel target: ketik `#✅verify`\n" +
-          "3. Judul: `Verifikasi Mahasiswa | Klik ✅ untuk membuka akses kuliah`\n" +
-          "4. Warna: `#2ecc71`\n" +
-          "5. Emoji & Role: ketik `✅ @🎓 Mahasiswa` lalu `done`\n" +
-          "6. **Set Type Verify**: ketik `!rr type 4` (agar sekali klik langsung terverifikasi permanen walau un-react).",
+          "1. Buka [carl.gg](https://carl.gg) → Login → Pilih Server\n" +
+          "2. Klik menu **Reaction Roles** → **Create new reaction role**\n" +
+          "3. Pilih Channel: `#✅verify`\n" +
+          "4. Mode: pilih **Verify** *(sekali klik permanen)*\n" +
+          "5. Emoji & Role: pilih `✅` dan `@🎓 Mahasiswa`\n" +
+          "6. Klik **Create**.",
         inline: false,
       },
       {
-        name: "2️⃣ Dropdown / Pilih Kelas di #🎭pilih-kelas (Carl-bot)",
+        name: "2️⃣ Pilih Kelas di #🎭pilih-kelas (Dashboard carl.gg)",
         value:
-          "1. Buka channel `#🎭pilih-kelas` lalu ketik: `!rr make`\n" +
-          "2. Masukkan opsi kelas:\n" +
-          "   `🏷️ @🏷️ IF-2-KA`\n" +
-          "   `🔖 @🏷️ IF-2-KM`\n" +
-          "3. Ketik `done` lalu ketik `!rr type 2` (Unique Mode: mahasiswa hanya bisa memilih salah satu kelas).",
+          "1. Di [carl.gg](https://carl.gg) → Reaction Roles → **Create new reaction role**\n" +
+          "2. Pilih Channel: `#🎭pilih-kelas`\n" +
+          "3. Mode: pilih **Unique** *(hanya bisa pilih 1 kelas)*\n" +
+          "4. Tambahkan emoji & role kelas:\n" +
+          "   • `🏷️` ➔ `@🏷️ IF-2-KA`\n" +
+          "   • `🔖` ➔ `@🏷️ IF-2-KM`\n" +
+          "5. Klik **Create**.",
         inline: false,
       },
       {
-        name: "3️⃣ Auto-Role Member Baru (Dyno)",
+        name: "3️⃣ Auto-Role Member Baru (Dyno Slash Command)",
         value:
-          "1. Buka dashboard `dyno.gg` → pilih server\n" +
-          "2. Masuk ke tab **Modules** → **Autoroles**\n" +
-          "3. Tambahkan role: **⏳ Unverified** (agar tiap akun baru otomatis dapat role unverified saat pertama kali join).",
+          "Ketik slash command di chat:\n" +
+          "`/autorole add role:@⏳ Unverified`\n" +
+          "*(Atau via web [dyno.gg](https://dyno.gg) → Modules → Autoroles)*",
         inline: false,
       },
       {
-        name: "4️⃣ Temp Voice 24/7 (VoiceMaster)",
+        name: "4️⃣ Temp Voice 24/7 (VoiceMaster Slash Command)",
         value:
-          "1. Invite VoiceMaster lewat tombol di atas\n" +
-          "2. Ketik `/setup` di channel chat\n" +
-          "3. Pilih `#➕create-room` sebagai channel Join to Create.",
+          "Ketik slash command di chat:\n" +
+          "`/setup` ➔ pilih channel `#➕create-room`.",
         inline: false,
       }
     )
     .setColor(0x2ecc71)
-    .setFooter({ text: "Sistem Category-Sync • 100% Synced • Siap pakai 24/7" });
+    .setFooter({ text: "100% Bebas Prefix • Native Discord Slash / Dashboard" });
 }

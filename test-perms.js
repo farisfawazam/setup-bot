@@ -23,7 +23,7 @@ console.log("✅ Category matching test passed: matched", matched.name);
 
 // Test 2: Verify carlBotGuideEmbed has required sections
 const guide = carlBotGuideEmbed();
-assert.ok(guide.data.title.includes("Panduan Lengkap"), "Guide title exists");
+assert.ok(guide.data.title.includes("Panduan Setup"), "Guide title exists");
 assert.strictEqual(guide.data.fields.length, 5, "Guide should have 5 fields");
 console.log("✅ Guide embed test passed with 5 detailed steps");
 
