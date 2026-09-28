@@ -78,8 +78,11 @@ export function carlBotGuideEmbed() {
     .setDescription("Discord bot modern memakai Dashboard Web atau Slash Command `/` (tanpa prefix `!` atau `?`):")
     .addFields(
       {
-        name: "0️⃣ Urutan Role (PENTING)",
-        value: "Buka **Server Settings** → **Roles** → Geser role **Carl-bot** & **Dyno** ke posisi atas di bawah role Admin.",
+        name: "0️⃣ Izin & Urutan Role (WAJIB)",
+        value:
+          "1. Buka **Server Settings** → **Roles** → klik role **Carl-bot**.\n" +
+          "2. Tab **Permissions** → scroll paling bawah → centang **Administrator** → Simpan *(agar bebas embed tautan/embed links)*.\n" +
+          "3. Geser posisi role **Carl-bot** ke atas role **Mahasiswa**.",
         inline: false,
       },
       {

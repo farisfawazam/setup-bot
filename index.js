@@ -101,6 +101,16 @@ async function applyTemplate(guild, template, onProgress) {
   // 1. Create main roles (reuse existing by name)
   log("📋 Creating roles...");
   await guild.roles.fetch();
+  await guild.members.fetch().catch(() => {});
+  const botMembers = guild.members.cache.filter((m) => m.user.bot);
+  const botRoles = [];
+  for (const [, bm] of botMembers) {
+    const role = bm.roles.botRole || bm.roles.highest;
+    if (role && role.id !== guild.roles.everyone.id && !botRoles.some((r) => r.id === role.id)) {
+      botRoles.push(role);
+    }
+  }
+
   const defaultVerifiedPerms = [
     PermissionFlagsBits.ViewChannel,
     PermissionFlagsBits.SendMessages,
@@ -301,6 +311,20 @@ async function applyTemplate(guild, template, onProgress) {
           });
         }
       }
+      for (const br of botRoles) {
+        catOverwrites.push({
+          id: br.id,
+          allow: [
+            PermissionFlagsBits.ViewChannel,
+            PermissionFlagsBits.SendMessages,
+            PermissionFlagsBits.EmbedLinks,
+            PermissionFlagsBits.AttachFiles,
+            PermissionFlagsBits.ReadMessageHistory,
+            PermissionFlagsBits.AddReactions,
+            PermissionFlagsBits.ManageMessages,
+          ],
+        });
+      }
     } else if (catAccess === "staff") {
       catOverwrites.push({
         id: guild.roles.everyone.id,
@@ -401,6 +425,20 @@ async function applyTemplate(guild, template, onProgress) {
               PermissionFlagsBits.AddReactions,
             ],
             deny: [PermissionFlagsBits.SendMessages],
+          });
+        }
+        for (const br of botRoles) {
+          channelOverwrites.push({
+            id: br.id,
+            allow: [
+              PermissionFlagsBits.ViewChannel,
+              PermissionFlagsBits.SendMessages,
+              PermissionFlagsBits.EmbedLinks,
+              PermissionFlagsBits.AttachFiles,
+              PermissionFlagsBits.ReadMessageHistory,
+              PermissionFlagsBits.AddReactions,
+              PermissionFlagsBits.ManageMessages,
+            ],
           });
         }
       } else if (ch.readOnly && catAccess !== "gate") {
