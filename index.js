@@ -805,6 +805,34 @@ client.on("guildMemberAdd", async (member) => {
   } catch (e) { console.error("memberAdd:", e.message); }
 });
 
+// ─── Auto-remove Unverified role when Verified role is acquired ───
+
+client.on("guildMemberUpdate", async (oldMember, newMember) => {
+  try {
+    const hasVerified = newMember.roles.cache.some(
+      (r) =>
+        r.name.toLowerCase().includes("mahasiswa") ||
+        r.name.toLowerCase().includes("member") ||
+        r.name.toLowerCase().includes("verified") ||
+        r.name.toLowerCase().includes("siswa")
+    );
+    if (!hasVerified) return;
+
+    const unverifiedRole = newMember.roles.cache.find(
+      (r) =>
+        r.name.toLowerCase().includes("unverified") ||
+        r.name.toLowerCase().includes("unverify") ||
+        r.name.toLowerCase().includes("belum") ||
+        r.name.toLowerCase().includes("not verified")
+    );
+    if (unverifiedRole) {
+      await newMember.roles.remove(unverifiedRole, "Auto-strip unverified upon verification").catch(() => {});
+    }
+  } catch (e) {
+    console.error("guildMemberUpdate error:", e.message);
+  }
+});
+
 // ─── Temp Voice Channel ───
 
 client.on("voiceStateUpdate", async (oldState, newState) => {
