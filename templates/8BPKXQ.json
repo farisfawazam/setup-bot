@@ -1,0 +1,319 @@
+{
+  "code": "8BPKXQ",
+  "description": "bikin layout untuk server web projeck untuk matkul kampus [revised: untuk saat ini hanya untuk satu kelas saja matkul ]",
+  "template": {
+    "roles": [
+      {
+        "name": "👑 Dosen / Asisten Dosen",
+        "color": "#e74c3c",
+        "permissions": [
+          "Administrator"
+        ],
+        "hoist": true,
+        "isStaff": true
+      },
+      {
+        "name": "🛡️ Koordinator Lab / Mod",
+        "color": "#e67e22",
+        "permissions": [
+          "ManageMessages",
+          "MuteMembers",
+          "MoveMembers"
+        ],
+        "hoist": true,
+        "isStaff": true
+      },
+      {
+        "name": "💎 Project Lead",
+        "color": "#9b59b6",
+        "permissions": [],
+        "hoist": true,
+        "isVip": true
+      },
+      {
+        "name": "✅ Mahasiswa Kelas",
+        "color": "#2ecc71",
+        "permissions": [],
+        "hoist": true,
+        "isVerified": true
+      },
+      {
+        "name": "⏳ Unverified",
+        "color": "#7f8c8d",
+        "permissions": [],
+        "hoist": false,
+        "isUnverified": true
+      }
+    ],
+    "selfRoles": [
+      {
+        "category": "💻 Divisi Tech",
+        "description": "Pilih divisi fokus teknologi proyek kamu",
+        "roles": [
+          {
+            "name": "Frontend",
+            "color": "#3498db",
+            "emoji": "🎨"
+          },
+          {
+            "name": "Backend",
+            "color": "#2ecc71",
+            "emoji": "⚙️"
+          },
+          {
+            "name": "UI/UX",
+            "color": "#e91e63",
+            "emoji": "📐"
+          },
+          {
+            "name": "DevOps",
+            "color": "#f39c12",
+            "emoji": "🚀"
+          }
+        ]
+      },
+      {
+        "category": "👥 Kelompok Kelas",
+        "description": "Pilih tim kelompok proyek kelas ini (hanya 1 kelompok)",
+        "singleChoice": true,
+        "roles": [
+          {
+            "name": "Kelompok 1",
+            "color": "#1abc9c",
+            "emoji": "1️⃣"
+          },
+          {
+            "name": "Kelompok 2",
+            "color": "#1abc9c",
+            "emoji": "2️⃣"
+          },
+          {
+            "name": "Kelompok 3",
+            "color": "#1abc9c",
+            "emoji": "3️⃣"
+          },
+          {
+            "name": "Kelompok 4",
+            "color": "#1abc9c",
+            "emoji": "4️⃣"
+          },
+          {
+            "name": "Kelompok 5",
+            "color": "#1abc9c",
+            "emoji": "5️⃣"
+          }
+        ]
+      }
+    ],
+    "categories": [
+      {
+        "name": "╔═══ 📌 PUSAT INFORMASI ═══╗",
+        "access": "gate",
+        "channels": [
+          {
+            "name": "📜rules",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Peraturan dan etika server kelas web project",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "✅verify",
+            "type": "text",
+            "isVerifyChannel": true,
+            "topic": "Verifikasi NIM dan nama mahasiswa kelas ini",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "📢announcements",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Pengumuman sprint, deadline tugas kelas",
+            "slowmode": 0
+          },
+          {
+            "name": "🎭role-select",
+            "type": "text",
+            "readOnly": true,
+            "isSelfRolesChannel": true,
+            "topic": "Pilih kelompok kelas dan divisi tech stack",
+            "slowmode": 0
+          },
+          {
+            "name": "📚silabus-materi",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Repository template, materi kuliah, roadmap sprint kelas",
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 💬 DISKUSI KELAS ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬general",
+            "type": "text",
+            "topic": "Diskusi umum internal satu kelas",
+            "slowmode": 2
+          },
+          {
+            "name": "❓help-coding",
+            "type": "text",
+            "topic": "Tanya jawab error tugas dan proyek kelas",
+            "slowmode": 5
+          },
+          {
+            "name": "💡showcase",
+            "type": "text",
+            "topic": "Demo progress milestone proyek kelompok kelas",
+            "slowmode": 10
+          },
+          {
+            "name": "🤖bot-commands",
+            "type": "text",
+            "topic": "Perintah bot utilitas kelas",
+            "slowmode": 3
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 👥 RUANG KELOMPOK ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬kelompok-1",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 1",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-2",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 2",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-3",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 3",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-4",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 4",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-5",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 5",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 🔊 WORKSPACE VOICE ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "➕buat-ruang",
+            "type": "voice",
+            "isTempVoiceGenerator": true,
+            "topic": "Otomatis buat voice room privat sprint",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊pair-coding-1",
+            "type": "voice",
+            "userLimit": 2,
+            "slowmode": 0
+          },
+          {
+            "name": "🔊pair-coding-2",
+            "type": "voice",
+            "userLimit": 2,
+            "slowmode": 0
+          },
+          {
+            "name": "🔊standup-kelompok",
+            "type": "voice",
+            "userLimit": 6,
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "🔊open-lab-lounge",
+            "type": "voice",
+            "userLimit": 0,
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╚═══ 🛡️ STAFF HQ ═══╝",
+        "access": "staff",
+        "channels": [
+          {
+            "name": "🔒staff-chat",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Koordinasi dosen dan asisten untuk penilaian kelas",
+            "slowmode": 0
+          },
+          {
+            "name": "🤖bot-log",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Log audit bot dan aktivitas server kelas",
+            "slowmode": 0
+          }
+        ]
+      }
+    ],
+    "welcomeEmbed": {
+      "title": "Portal Kelas Web Project",
+      "description": "Server resmi satu kelas mata kuliah Web Project. Ikuti langkah masuk:",
+      "color": "#3498db",
+      "fields": [
+        {
+          "name": "1️⃣ Baca Peraturan",
+          "value": "Cek ketentuan kelas di rules.",
+          "inline": false
+        },
+        {
+          "name": "2️⃣ Verifikasi Akun",
+          "value": "Kirim format NIM_Nama di verify untuk validasi presensi kelas.",
+          "inline": false
+        },
+        {
+          "name": "3️⃣ Ambil Role",
+          "value": "Pilih kelompok kelas dan tech stack di role-select.",
+          "inline": false
+        }
+      ]
+    },
+    "rulesEmbed": {
+      "title": "Peraturan Kelas Web Project",
+      "description": "Regulasi resmi kegiatan praktikum dan tugas kelas:",
+      "color": "#e74c3c",
+      "rules": [
+        "Khusus Mahasiswa Terdaftar: Server khusus peserta kelas matkul Web Project semester ini.",
+        "Identitas: Display name wajib format: NIM - Nama Lengkap.",
+        "Diskusi: Troubleshooting kode kirim di help-coding menggunakan syntax codeblock.",
+        "Integritas: Dilarang plagiasi tugas antar-kelompok dalam kelas.",
+        "Sanksi: Pelanggaran etika berakibat sanksi server dan diskualifikasi nilai sprint."
+      ]
+    }
+  },
+  "createdAt": "2026-09-28T06:54:44.027Z"
+}

@@ -1,0 +1,297 @@
+{
+  "code": "31BZIH",
+  "description": "bikin server untuk matkul web project, matkul ini hanya untuk 2 kelas saja yaitu IF - 2 - KA, dan IF - 2 - KM, bikin agar tidak terlalu kompleks karena hanya untuk 1 matkul",
+  "template": {
+    "roles": [
+      {
+        "name": "👨‍🏫 Dosen",
+        "color": "#800020",
+        "permissions": [
+          "Administrator"
+        ],
+        "hoist": true,
+        "isStaff": true
+      },
+      {
+        "name": "🛠️ Asisten Lab",
+        "color": "#1f3a93",
+        "permissions": [
+          "ManageMessages",
+          "MuteMembers",
+          "MoveMembers"
+        ],
+        "hoist": true,
+        "isStaff": true
+      },
+      {
+        "name": "⭐ Komti / Ketua Kelas",
+        "color": "#f1c40f",
+        "permissions": [
+          "PrioritySpeaker"
+        ],
+        "hoist": true
+      },
+      {
+        "name": "🎓 Mahasiswa",
+        "color": "#2ecc71",
+        "permissions": [],
+        "hoist": true,
+        "isVerified": true
+      },
+      {
+        "name": "⏳ Unverified",
+        "color": "#7f8c8d",
+        "permissions": [],
+        "hoist": false,
+        "isUnverified": true
+      }
+    ],
+    "selfRoles": [
+      {
+        "category": "🏛️ Kelas Mahasiswa",
+        "description": "Pilih kelas paralel terdaftar",
+        "singleChoice": true,
+        "roles": [
+          {
+            "name": "🏷️ IF-2-KA",
+            "color": "#00bcd4",
+            "emoji": "🏷️"
+          },
+          {
+            "name": "🏷️ IF-2-KM",
+            "color": "#9b59b6",
+            "emoji": "🏷️"
+          }
+        ]
+      },
+      {
+        "category": "💻 Tech Stack",
+        "description": "Pilih fokus peran tim web project",
+        "roles": [
+          {
+            "name": "🎨 Frontend",
+            "color": "#95a5a6",
+            "emoji": "🎨"
+          },
+          {
+            "name": "⚙️ Backend",
+            "color": "#95a5a6",
+            "emoji": "⚙️"
+          },
+          {
+            "name": "🖌️ UI-UX",
+            "color": "#95a5a6",
+            "emoji": "🖌️"
+          }
+        ]
+      }
+    ],
+    "categories": [
+      {
+        "name": "╔═══ 📌 PUSAT INFO ═══╗",
+        "access": "gate",
+        "channels": [
+          {
+            "name": "📜rules",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Ketentuan matkul & etika coding",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "✅verify",
+            "type": "text",
+            "isVerifyChannel": true,
+            "topic": "Verifikasi mahasiswa web project",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "🎭pilih-kelas",
+            "type": "text",
+            "readOnly": true,
+            "isSelfRolesChannel": true,
+            "topic": "Pilih role kelas dan tech stack",
+            "slowmode": 0
+          },
+          {
+            "name": "📢pengumuman",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Info deadline, materi, dan link kuliah sinkron",
+            "slowmode": 0
+          },
+          {
+            "name": "📂materi-kuliah",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Slide, dokumentasi API, dan starter code",
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 💬 DISKUSI UMUM ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬general-chat",
+            "type": "text",
+            "topic": "Diskusi santai antarkelas",
+            "slowmode": 3
+          },
+          {
+            "name": "💡tanya-error",
+            "type": "text",
+            "topic": "Forum debug wajib sertakan potongan kode & log error",
+            "slowmode": 5
+          },
+          {
+            "name": "🚀showcase-web",
+            "type": "text",
+            "topic": "Demo progres sprint mingguan",
+            "slowmode": 15
+          },
+          {
+            "name": "🤖bot-commands",
+            "type": "text",
+            "topic": "Bot utility, link repo GitHub, dan reminder bot",
+            "slowmode": 3
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 🏛️ KELAS IF - 2 - KA ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬diskusi-ka",
+            "type": "text",
+            "topic": "Koordinasi internal kelas IF-2-KA",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊voice-ka",
+            "type": "voice",
+            "userLimit": 0,
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 🏛️ KELAS IF - 2 - KM ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬diskusi-km",
+            "type": "text",
+            "topic": "Koordinasi internal kelas IF-2-KM",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊voice-km",
+            "type": "voice",
+            "userLimit": 0,
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 🔊 WORKSPACE VOICE ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "➕create-room",
+            "type": "voice",
+            "isTempVoiceGenerator": true,
+            "topic": "Masuk untuk otomatis membuat voice room privat",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊pair-programming-1",
+            "type": "voice",
+            "userLimit": 2,
+            "slowmode": 0
+          },
+          {
+            "name": "🔊pair-programming-2",
+            "type": "voice",
+            "userLimit": 2,
+            "slowmode": 0
+          },
+          {
+            "name": "🔊group-sync",
+            "type": "voice",
+            "userLimit": 6,
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╚═══ 🛡️ DOSEN & ASLAB HQ ═══╝",
+        "access": "staff",
+        "channels": [
+          {
+            "name": "🔒staff-chat",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Diskusi nilai dan kecurangan kode",
+            "slowmode": 0
+          },
+          {
+            "name": "🤖bot-log",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Audit log aktivitas bot",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊ruang-konsultasi",
+            "type": "voice",
+            "staffOnly": true,
+            "userLimit": 3,
+            "topic": "Sidang progres dan evaluasi code review",
+            "slowmode": 0
+          }
+        ]
+      }
+    ],
+    "welcomeEmbed": {
+      "title": "Selamat Datang di Web Project Server!",
+      "description": "Ikuti alur onboarding mahasiswa untuk membuka seluruh kanal perkuliahan:",
+      "color": "#2ecc71",
+      "fields": [
+        {
+          "name": "1️⃣ Baca Peraturan",
+          "value": "Pahami tata tertib di channel rules.",
+          "inline": false
+        },
+        {
+          "name": "2️⃣ Verifikasi Akun",
+          "value": "Klik tombol verifikasi di channel verify.",
+          "inline": false
+        },
+        {
+          "name": "3️⃣ Ambil Role & Ubah Nickname",
+          "value": "Pilih kelas di pilih-kelas dan set nickname NIM - Nama Lengkap.",
+          "inline": false
+        }
+      ]
+    },
+    "rulesEmbed": {
+      "title": "📜 Ketentuan Matkul & Etika Coding",
+      "description": "Seluruh peserta mata kuliah wajib mematuhi aturan berikut demi kelancaran akademik:",
+      "color": "#800020",
+      "rules": [
+        "Identitas Valid: Gunakan display name server dengan format NIM - Nama Lengkap.",
+        "Integritas Akademik: Dilarang keras copas kode repo mahasiswa lain. Tindakan plagiarisme menghasilkan nilai proyek otomatis E.",
+        "Format Tanya Error: Gunakan Markdown code block (triple backtick) disertai penjelasan ekspektasi vs bug riil. Dilarang mengirim foto layar monitor via kamera HP.",
+        "Etika Komunikasi: Gunakan bahasa yang santun terhadap Dosen, Asisten Lab, dan sesama rekan mahasiswa.",
+        "Disiplin Kanal: Topik di luar lingkup web project dilarang masuk ke forum diskusi teknis.",
+        "Sanksi Pelanggaran: Peringatan tertulis → Timeout 24 jam → Kick dari server / Nilai proyek digugurkan."
+      ]
+    }
+  },
+  "createdAt": "2026-09-28T06:57:47.720Z"
+}

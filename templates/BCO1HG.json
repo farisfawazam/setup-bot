@@ -1,0 +1,319 @@
+{
+  "code": "BCO1HG",
+  "description": "bikin layout untuk server web projeck untuk matkul kampus",
+  "template": {
+    "roles": [
+      {
+        "name": "👑 Dosen / Asisten Dosen",
+        "color": "#e74c3c",
+        "permissions": [
+          "Administrator"
+        ],
+        "hoist": true,
+        "isStaff": true
+      },
+      {
+        "name": "🛡️ Koordinator Lab / Mod",
+        "color": "#e67e22",
+        "permissions": [
+          "ManageMessages",
+          "MuteMembers",
+          "MoveMembers"
+        ],
+        "hoist": true,
+        "isStaff": true
+      },
+      {
+        "name": "💎 Project Lead",
+        "color": "#9b59b6",
+        "permissions": [],
+        "hoist": true,
+        "isVip": true
+      },
+      {
+        "name": "✅ Mahasiswa",
+        "color": "#2ecc71",
+        "permissions": [],
+        "hoist": true,
+        "isVerified": true
+      },
+      {
+        "name": "⏳ Unverified",
+        "color": "#7f8c8d",
+        "permissions": [],
+        "hoist": false,
+        "isUnverified": true
+      }
+    ],
+    "selfRoles": [
+      {
+        "category": "💻 Divisi Tech",
+        "description": "Pilih divisi fokus teknologi proyek kamu",
+        "roles": [
+          {
+            "name": "Frontend",
+            "color": "#3498db",
+            "emoji": "🎨"
+          },
+          {
+            "name": "Backend",
+            "color": "#2ecc71",
+            "emoji": "⚙️"
+          },
+          {
+            "name": "UI/UX",
+            "color": "#e91e63",
+            "emoji": "📐"
+          },
+          {
+            "name": "DevOps",
+            "color": "#f39c12",
+            "emoji": "🚀"
+          }
+        ]
+      },
+      {
+        "category": "👥 Kelompok Proyek",
+        "description": "Pilih tim kelompok kamu (hanya 1 kelompok)",
+        "singleChoice": true,
+        "roles": [
+          {
+            "name": "Kelompok 1",
+            "color": "#1abc9c",
+            "emoji": "1️⃣"
+          },
+          {
+            "name": "Kelompok 2",
+            "color": "#1abc9c",
+            "emoji": "2️⃣"
+          },
+          {
+            "name": "Kelompok 3",
+            "color": "#1abc9c",
+            "emoji": "3️⃣"
+          },
+          {
+            "name": "Kelompok 4",
+            "color": "#1abc9c",
+            "emoji": "4️⃣"
+          },
+          {
+            "name": "Kelompok 5",
+            "color": "#1abc9c",
+            "emoji": "5️⃣"
+          }
+        ]
+      }
+    ],
+    "categories": [
+      {
+        "name": "╔═══ 📌 PUSAT INFORMASI ═══╗",
+        "access": "gate",
+        "channels": [
+          {
+            "name": "📜rules",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Peraturan dan etika server praktikum",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "✅verify",
+            "type": "text",
+            "isVerifyChannel": true,
+            "topic": "Verifikasi identitas NIM dan nama mahasiswa",
+            "visibleToUnverified": true,
+            "slowmode": 0
+          },
+          {
+            "name": "📢announcements",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Pengumuman sprint, deadline, dan tugas",
+            "slowmode": 0
+          },
+          {
+            "name": "🎭role-select",
+            "type": "text",
+            "readOnly": true,
+            "isSelfRolesChannel": true,
+            "topic": "Pilih kelompok dan divisi tech stack",
+            "slowmode": 0
+          },
+          {
+            "name": "📚silabus-materi",
+            "type": "text",
+            "readOnly": true,
+            "topic": "Repository template, API doc, dan roadmap",
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 💬 DISKUSI TEKNIS ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬general",
+            "type": "text",
+            "topic": "Obrolan santai dan umum perkuliahan",
+            "slowmode": 2
+          },
+          {
+            "name": "❓help-coding",
+            "type": "text",
+            "topic": "Forum troubleshooting code React, Express, DB",
+            "slowmode": 5
+          },
+          {
+            "name": "💡showcase",
+            "type": "text",
+            "topic": "Demo progress sprint dan live preview URL",
+            "slowmode": 10
+          },
+          {
+            "name": "🤖bot-commands",
+            "type": "text",
+            "topic": "Interaksi bot GitHub dan bot utility",
+            "slowmode": 3
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 👥 RUANG KELOMPOK ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "💬kelompok-1",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 1",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-2",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 2",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-3",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 3",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-4",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 4",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "💬kelompok-5",
+            "type": "text",
+            "topic": "Ruang koordinasi internal Kelompok 5",
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          }
+        ]
+      },
+      {
+        "name": "╠═══ 🔊 WORKSPACE VOICE ═══╣",
+        "access": "public",
+        "channels": [
+          {
+            "name": "➕buat-ruang",
+            "type": "voice",
+            "isTempVoiceGenerator": true,
+            "topic": "Masuk untuk otomatis membuat voice room privat",
+            "slowmode": 0
+          },
+          {
+            "name": "🔊pair-coding-1",
+            "type": "voice",
+            "userLimit": 2,
+            "slowmode": 0
+          },
+          {
+            "name": "🔊pair-coding-2",
+            "type": "voice",
+            "userLimit": 2,
+            "slowmode": 0
+          },
+          {
+            "name": "🔊standup-kelompok",
+            "type": "voice",
+            "userLimit": 6,
+            "slowmode": 0,
+            "isSelfRolesChannel": true
+          },
+          {
+            "name": "🔊open-lab-lounge",
+            "type": "voice",
+            "userLimit": 0,
+            "slowmode": 0
+          }
+        ]
+      },
+      {
+        "name": "╚═══ 🛡️ STAFF HQ ═══╝",
+        "access": "staff",
+        "channels": [
+          {
+            "name": "🔒staff-chat",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Koordinasi dosen, asisten, grading, dan absensi",
+            "slowmode": 0
+          },
+          {
+            "name": "🤖bot-log",
+            "type": "text",
+            "staffOnly": true,
+            "topic": "Audit log server dan webhook commit git",
+            "slowmode": 0
+          }
+        ]
+      }
+    ],
+    "welcomeEmbed": {
+      "title": "Selamat Datang di Portal Proyek Web",
+      "description": "Ikuti panduan orientasi berikut untuk membuka akses server:",
+      "color": "#3498db",
+      "fields": [
+        {
+          "name": "1️⃣ Baca Peraturan",
+          "value": "Pelajari tata tertib praktikum di channel rules.",
+          "inline": false
+        },
+        {
+          "name": "2️⃣ Verifikasi Akun",
+          "value": "Buka channel verify dan input dengan format NIM_Nama.",
+          "inline": false
+        },
+        {
+          "name": "3️⃣ Ambil Role",
+          "value": "Pilih kelompok dan tech stack di role-select untuk akses channel proyek.",
+          "inline": false
+        }
+      ]
+    },
+    "rulesEmbed": {
+      "title": "Peraturan Server & Praktikum",
+      "description": "Patuhi regulasi akademik berikut selama perkuliahan berlangsung:",
+      "color": "#e74c3c",
+      "rules": [
+        "Etika: Gunakan bahasa sopan. Bebas SARA, toxicity, harassment.",
+        "Identitas: Wajib gunakan display name asli: NIM - Nama Lengkap.",
+        "Channel Focus: Error code kirim di help-coding gunakan codeblock markdown. Dilarang spam screenshot layar ponsel.",
+        "Integritas Akademik: Dilarang keras posting full source code milik tim lain tanpa izin (anti-plagiarisme).",
+        "Sanksi: Peringatan 1 -> Timeout 24 Jam -> Ban permanen dari server dan penalti nilai sprint."
+      ]
+    }
+  },
+  "createdAt": "2026-09-28T06:53:32.958Z"
+}

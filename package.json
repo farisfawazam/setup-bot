@@ -1,0 +1,14 @@
+{
+  "name": "setup-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js",
+    "stop": "if exist bot.pid (for /f %i in (bot.pid) do taskkill /F /PID %i 2>nul) & del bot.pid"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.5.0"
+  }
+}
