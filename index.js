@@ -9,7 +9,7 @@ import "dotenv/config";
 import http from "http";
 import { generateTemplate, reviseTemplate } from "./ai.js";
 import { saveTemplate, loadTemplate, listTemplates, deleteTemplate } from "./store.js";
-import { botsEmbed, companionBotEmbed, companionBotActionRow } from "./bots.js";
+import { botsEmbed, companionBotEmbed, companionBotActionRow, carlBotGuideEmbed } from "./bots.js";
 
 const client = new Client({
   intents: [
@@ -926,13 +926,22 @@ client.on("interactionCreate", async (interaction) => {
       return;
     }
 
+    // ── Button: View Companion Guide ──
+    if (interaction.isButton() && interaction.customId === "view_companion_guide") {
+      await interaction.reply({ embeds: [carlBotGuideEmbed()], flags: MessageFlags.Ephemeral });
+      return;
+    }
+
     // ── Slash Commands ──
     if (!interaction.isChatInputCommand()) return;
     const { commandName } = interaction;
 
     // Public command: /bots
     if (commandName === "bots") {
-      await interaction.reply({ embeds: [botsEmbed()] });
+      await interaction.reply({
+        embeds: [botsEmbed(), companionBotEmbed()],
+        components: [companionBotActionRow()],
+      });
       return;
     }
 
