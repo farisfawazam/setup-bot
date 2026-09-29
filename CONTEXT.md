@@ -168,6 +168,13 @@ C:\Users\User\setup-bot\
 - `Setup Bot: Anti-Scam` (keyword filter untuk free nitro, steam gift, crypto scam)
 - Seluruh aturan Auto-Mod mengecualikan role Staff (`exemptRoles: staffRoleIds`).
 
+### 7. Server Kuliah Web Project (Guild: 1550332936493076660) & Bot Identity
+- **Identitas Bot**: `Raviel Ivansia` (Avatar HD: anime Raviel Ivansia dari *SSS-Class Suicide Hunter*, rambut putih, mata merah).
+- **Template Aktif**: `templates/ZU8XNY.json` (Aturan 1: "Ganti nama server dengan Nama lengkap anda sesuai dengan nama asli.").
+- **Jadwal Perkuliahan**:
+  - Channel `#📅jadwal-ka` (`1554301847907606628`) & `#📅jadwal-km` (`1554305253560553543`) ter-pin dengan master schedule embed clean blockquote.
+  - 26 Discord Native Scheduled Events (13 sesi KA, 13 sesi KM) berulang mingguan (weekly recurrence). Start time dimajukan H-30 menit sebelum jam kuliah asli agar event pasti LIVE sebelum kelas mulai.
+
 ## Operasional
 
 ```powershell

@@ -246,7 +246,7 @@
       "description": "Patuhi aturan berikut demi kelancaran kegiatan belajar mengajar:",
       "color": "#e74c3c",
       "rules": [
-        "Ganti nama server dengan format: NIM - Nama Lengkap.",
+        "Ganti nama server dengan Nama lengkap anda sesuai dengan nama asli.",
         "Hormati dosen, asisten, dan sesama mahasiswa.",
         "Dilarang copas total tugas (kode terdeteksi plagiat bernilai 0).",
         "Gunakan channel sesuai fungsi (tanya error kodingan di tanya-jawab-tugas).",
