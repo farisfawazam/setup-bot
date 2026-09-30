@@ -26,16 +26,37 @@ C:\Users\User\setup-bot\
 └── templates/            # Direktori penyimpanan template (format: [KODE].json)
 ```
 
-## Slash Commands
+## Slash Commands (18 All-in-One Commands)
+
+### 🤖 AI Assistant & Utility (Semua Member)
 | Command | Deskripsi | Akses |
 |---|---|---|
-| `/generate deskripsi:...` | AI 2-step merancang template server dari nol | Semua member |
-| `/revise kode:... feedback:...` | AI memodifikasi template yang ada berdasarkan catatan revisi | Semua member |
-| `/setup kode:...` | Menampilkan preview + tombol konfirmasi apply ke guild | Administrator |
-| `/clear-setup kode:...` | Menghapus channel, role, dan auto-mod rules milik template | Administrator |
-| `/templates` | Daftar semua template lokal yang tersimpan | Semua member |
-| `/delete-template kode:...` | Menghapus file template dari penyimpanan lokal | Semua member |
-| `/bots` | Menampilkan rekomendasi bot pelengkap server | Semua member |
+| `/ask pertanyaan:...` | Tanya AI Raviel tentang kodingan, game, tugas, atau hal umum | Semua member |
+| `/ping` | Cek latensi WebSocket & respon Discord API bot | Semua member |
+| `/serverinfo` | Statistik & info lengkap server (member, roles, boost, channels) | Semua member |
+| `/userinfo [target:...]` | Detail profil akun, avatar, role, dan tanggal join | Semua member |
+| `/remind menit:... pesan:...` | Alarm timer pengingat otomatis via DM/channel | Semua member |
+| `/bots` | Rekomendasi bot pelengkap server & panduan setup 24/7 | Semua member |
+
+### 🛡️ Moderasi & Staff Suite (Moderator / Staff)
+| Command | Deskripsi | Akses |
+|---|---|---|
+| `/say pesan:... [channel:...]` | Kirim pesan / pengumuman resmi atas nama bot | Staff / Mod |
+| `/purge jumlah:...` | Hapus pesan massal bersih (1 - 100 pesan) | Staff / Mod |
+| `/kick target:... [alasan:...]` | Kick member dari server | Staff / Mod |
+| `/ban target:... [alasan:...]` | Ban member dari server | Staff / Mod |
+| `/timeout target:... menit:... [alasan:...]` | Mute / timeout sementara member | Staff / Mod |
+| `/warn target:... alasan:...` | Beri peringatan resmi ke member (+ log staff) | Staff / Mod |
+
+### ⚙️ Template & Server Architect Engine (Admin / Owner)
+| Command | Deskripsi | Akses |
+|---|---|---|
+| `/generate deskripsi:...` | AI 2-step merancang template server dari nol | Admin / Owner |
+| `/revise kode:... feedback:...` | AI memodifikasi template yang ada berdasarkan catatan revisi | Admin / Owner |
+| `/setup kode:...` | Menampilkan preview + tombol konfirmasi apply ke guild | Admin / Owner |
+| `/clear-setup kode:...` | Menghapus channel, role, dan auto-mod rules milik template | Admin / Owner |
+| `/templates` | Daftar semua template lokal yang tersimpan | Admin / Owner |
+| `/delete-template kode:...` | Menghapus file template dari penyimpanan lokal | Admin / Owner |
 
 ## Template JSON Schema (V3 Enterprise)
 ```json

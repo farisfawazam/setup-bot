@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import "dotenv/config";
 import http from "http";
-import { generateTemplate, reviseTemplate } from "./ai.js";
+import { generateTemplate, reviseTemplate, askAI } from "./ai.js";
 import { saveTemplate, loadTemplate, listTemplates, deleteTemplate } from "./store.js";
 import { botsEmbed, companionBotEmbed, companionBotActionRow, carlBotGuideEmbed } from "./bots.js";
 
@@ -55,6 +55,25 @@ function isAuthorized(interaction) {
   if (interaction.guild && interaction.guild.ownerId === interaction.user.id) return true;
   if (interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) return true;
   return false;
+}
+
+function isStaffMember(interaction) {
+  if (isAuthorized(interaction)) return true;
+  const member = interaction.member;
+  if (!member) return false;
+  return (
+    member.permissions.has(PermissionFlagsBits.ManageMessages) ||
+    member.permissions.has(PermissionFlagsBits.KickMembers) ||
+    member.permissions.has(PermissionFlagsBits.BanMembers) ||
+    member.permissions.has(PermissionFlagsBits.ModerateMembers) ||
+    member.roles.cache.some((r) =>
+      r.name.toLowerCase().includes("owner") ||
+      r.name.toLowerCase().includes("admin") ||
+      r.name.toLowerCase().includes("mod") ||
+      r.name.toLowerCase().includes("dosen") ||
+      r.name.toLowerCase().includes("staff")
+    )
+  );
 }
 
 // Track temp voice channels: channelId -> { ownerId, guildId }
@@ -814,7 +833,11 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
         r.name.toLowerCase().includes("mahasiswa") ||
         r.name.toLowerCase().includes("member") ||
         r.name.toLowerCase().includes("verified") ||
-        r.name.toLowerCase().includes("siswa")
+        r.name.toLowerCase().includes("siswa") ||
+        r.name.toLowerCase().includes("warga") ||
+        r.name.toLowerCase().includes("citizen") ||
+        r.name.toLowerCase().includes("player") ||
+        r.name.toLowerCase().includes("peserta")
     );
     if (!hasVerified) return;
 
@@ -1148,6 +1171,232 @@ client.on("interactionCreate", async (interaction) => {
         components: [companionBotActionRow()],
       });
       return;
+    }
+
+    // ── Public Commands ──
+
+    // /ping
+    if (commandName === "ping") {
+      const sent = await interaction.reply({ content: "🏓 Pinging...", fetchReply: true });
+      const latency = sent.createdTimestamp - interaction.createdTimestamp;
+      const wsPing = Math.round(client.ws.ping);
+      return interaction.editReply({
+        content: `🏓 **Pong!**\n• Latensi Respon: \`${latency}ms\`\n• WebSocket Discord: \`${wsPing}ms\``,
+      });
+    }
+
+    // /ask — AI Assistant
+    if (commandName === "ask") {
+      const question = interaction.options.getString("pertanyaan");
+      await interaction.deferReply();
+      try {
+        const answer = await askAI(question);
+        const embed = new EmbedBuilder()
+          .setColor(0x5865f2)
+          .setAuthor({
+            name: `Tanya AI — ${interaction.user.displayName || interaction.user.username}`,
+            iconURL: interaction.user.displayAvatarURL(),
+          })
+          .setTitle("💬 " + (question.length > 250 ? question.slice(0, 247) + "..." : question))
+          .setDescription(answer.slice(0, 4000))
+          .setFooter({ text: "Raviel Ivansia AI Assistant • Model: gemini-3.8-flash" })
+          .setTimestamp();
+        return await interaction.editReply({ embeds: [embed] });
+      } catch (err) {
+        return await interaction.editReply({
+          content: `❌ Gagal memproses jawaban AI: ${err.message}`,
+        });
+      }
+    }
+
+    // /serverinfo
+    if (commandName === "serverinfo") {
+      const { guild } = interaction;
+      const owner = await guild.fetchOwner().catch(() => null);
+      const textCount = guild.channels.cache.filter((c) => c.type === ChannelType.GuildText).size;
+      const voiceCount = guild.channels.cache.filter((c) => c.type === ChannelType.GuildVoice).size;
+      const categoryCount = guild.channels.cache.filter((c) => c.type === ChannelType.GuildCategory).size;
+
+      const embed = new EmbedBuilder()
+        .setTitle(`📊 Server Info — ${guild.name}`)
+        .setColor(0x3498db)
+        .setThumbnail(guild.iconURL({ dynamic: true, size: 256 }))
+        .addFields(
+          { name: "👑 Owner", value: owner ? `<@${owner.id}> (${owner.user.tag})` : "Unknown", inline: true },
+          { name: "👥 Total Member", value: `**${guild.memberCount}** member`, inline: true },
+          { name: "🚀 Boost Level", value: `Tier ${guild.premiumTier} (${guild.premiumSubscriptionCount || 0} boosts)`, inline: true },
+          { name: "💬 Channels", value: `📁 ${categoryCount} Kategori\n💬 ${textCount} Text\n🔊 ${voiceCount} Voice`, inline: true },
+          { name: "🎭 Roles", value: `${guild.roles.cache.size} roles`, inline: true },
+          { name: "📅 Dibuat Pada", value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:D> (<t:${Math.floor(guild.createdTimestamp / 1000)}:R>)`, inline: true }
+        )
+        .setFooter({ text: `ID Server: ${guild.id}` })
+        .setTimestamp();
+      return interaction.reply({ embeds: [embed] });
+    }
+
+    // /userinfo
+    if (commandName === "userinfo") {
+      const targetUser = interaction.options.getUser("target") || interaction.user;
+      const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+
+      const roles = targetMember
+        ? targetMember.roles.cache
+            .filter((r) => r.id !== interaction.guild.id)
+            .sort((a, b) => b.position - a.position)
+            .map((r) => `<@&${r.id}>`)
+        : [];
+
+      const rolesStr = roles.length ? roles.slice(0, 15).join(" ") + (roles.length > 15 ? ` +${roles.length - 15} lainnya` : "") : "None";
+
+      const embed = new EmbedBuilder()
+        .setTitle(`👤 User Info — ${targetUser.tag}`)
+        .setColor(targetMember?.displayColor || 0x3498db)
+        .setThumbnail(targetUser.displayAvatarURL({ dynamic: true, size: 256 }))
+        .addFields(
+          { name: "📛 Display Name", value: targetMember?.displayName || targetUser.username, inline: true },
+          { name: "🆔 User ID", value: targetUser.id, inline: true },
+          { name: "🤖 Tipe Akun", value: targetUser.bot ? "Bot" : "User Biasa", inline: true },
+          { name: "📅 Akun Dibuat", value: `<t:${Math.floor(targetUser.createdTimestamp / 1000)}:D> (<t:${Math.floor(targetUser.createdTimestamp / 1000)}:R>)`, inline: true },
+          { name: "📥 Masuk Server", value: targetMember ? `<t:${Math.floor(targetMember.joinedTimestamp / 1000)}:D> (<t:${Math.floor(targetMember.joinedTimestamp / 1000)}:R>)` : "Tidak ada data", inline: true },
+          { name: `🎭 Roles (${roles.length})`, value: rolesStr, inline: false }
+        )
+        .setTimestamp();
+      return interaction.reply({ embeds: [embed] });
+    }
+
+    // /remind
+    if (commandName === "remind") {
+      const minutes = interaction.options.getInteger("menit");
+      const message = interaction.options.getString("pesan");
+      const targetUserId = interaction.user.id;
+      const channelId = interaction.channelId;
+
+      await interaction.reply({
+        content: `⏰ **Pengingat Dipasang!** Aku akan mengingatkanmu dalam **${minutes} menit** untuk:\n> "${message}"`,
+        flags: MessageFlags.Ephemeral,
+      });
+
+      setTimeout(async () => {
+        try {
+          const user = await client.users.fetch(targetUserId);
+          await user.send(`⏰ **ALARM PENGINGAT:** ${message}`);
+        } catch {
+          const ch = client.channels.cache.get(channelId);
+          if (ch) await ch.send(`⏰ <@${targetUserId}> **PENGINGAT:** ${message}`).catch(() => {});
+        }
+      }, minutes * 60 * 1000);
+      return;
+    }
+
+    // ── Staff & Moderation Commands ──
+
+    // /say
+    if (commandName === "say") {
+      if (!isStaffMember(interaction)) {
+        return interaction.reply({ content: "❌ Command ini hanya untuk Staff / Moderator.", flags: MessageFlags.Ephemeral });
+      }
+      const message = interaction.options.getString("pesan");
+      const targetChannel = interaction.options.getChannel("channel") || interaction.channel;
+
+      await targetChannel.send(message);
+      return interaction.reply({ content: `✅ Pesan berhasil dikirim ke <#${targetChannel.id}>.`, flags: MessageFlags.Ephemeral });
+    }
+
+    // /purge
+    if (commandName === "purge") {
+      if (!isStaffMember(interaction)) {
+        return interaction.reply({ content: "❌ Command ini hanya untuk Staff / Moderator.", flags: MessageFlags.Ephemeral });
+      }
+      const amount = interaction.options.getInteger("jumlah");
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+      const deleted = await interaction.channel.bulkDelete(amount, true).catch((e) => {
+        throw new Error(`Gagal hapus pesan: ${e.message}`);
+      });
+      return interaction.editReply({
+        content: `🧹 Berhasil membersihkan **${deleted.size}** pesan di <#${interaction.channelId}>.`,
+      });
+    }
+
+    // /kick
+    if (commandName === "kick") {
+      if (!isStaffMember(interaction)) {
+        return interaction.reply({ content: "❌ Command ini hanya untuk Staff / Moderator.", flags: MessageFlags.Ephemeral });
+      }
+      const targetUser = interaction.options.getUser("target");
+      const reason = interaction.options.getString("alasan") || "Tidak ada alasan disertakan";
+      const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+
+      if (!targetMember) return interaction.reply({ content: "❌ Member tidak ditemukan di server.", flags: MessageFlags.Ephemeral });
+      if (!targetMember.kickable) {
+        return interaction.reply({ content: "❌ Bot tidak bisa meng-kick member ini (posisi role target lebih tinggi atau setara bot/kamu).", flags: MessageFlags.Ephemeral });
+      }
+
+      await targetMember.kick(reason);
+      await botLog(interaction.guild, `👢 **${targetUser.tag}** di-kick oleh ${interaction.user.tag}. Alasan: ${reason}`);
+      return interaction.reply({
+        embeds: [makeEmbed("👢 Member Dikeluarkan", `**Member:** <@${targetUser.id}> (${targetUser.tag})\n**Moderator:** <@${interaction.user.id}>\n**Alasan:** ${reason}`, 0xe67e22)],
+      });
+    }
+
+    // /ban
+    if (commandName === "ban") {
+      if (!isStaffMember(interaction)) {
+        return interaction.reply({ content: "❌ Command ini hanya untuk Staff / Moderator.", flags: MessageFlags.Ephemeral });
+      }
+      const targetUser = interaction.options.getUser("target");
+      const reason = interaction.options.getString("alasan") || "Tidak ada alasan disertakan";
+      const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+
+      if (targetMember && !targetMember.bannable) {
+        return interaction.reply({ content: "❌ Bot tidak bisa mem-ban member ini (posisi role target lebih tinggi atau setara bot/kamu).", flags: MessageFlags.Ephemeral });
+      }
+
+      await interaction.guild.members.ban(targetUser.id, { reason });
+      await botLog(interaction.guild, `🔨 **${targetUser.tag}** di-ban oleh ${interaction.user.tag}. Alasan: ${reason}`);
+      return interaction.reply({
+        embeds: [makeEmbed("🔨 Member Di-Ban", `**Member:** <@${targetUser.id}> (${targetUser.tag})\n**Moderator:** <@${interaction.user.id}>\n**Alasan:** ${reason}`, 0xe74c3c)],
+      });
+    }
+
+    // /timeout
+    if (commandName === "timeout") {
+      if (!isStaffMember(interaction)) {
+        return interaction.reply({ content: "❌ Command ini hanya untuk Staff / Moderator.", flags: MessageFlags.Ephemeral });
+      }
+      const targetUser = interaction.options.getUser("target");
+      const minutes = interaction.options.getInteger("menit");
+      const reason = interaction.options.getString("alasan") || "Tidak ada alasan disertakan";
+      const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+
+      if (!targetMember) return interaction.reply({ content: "❌ Member tidak ditemukan di server.", flags: MessageFlags.Ephemeral });
+      if (!targetMember.moderatable) {
+        return interaction.reply({ content: "❌ Bot tidak bisa me-mute member ini (posisi role target lebih tinggi atau setara bot/kamu).", flags: MessageFlags.Ephemeral });
+      }
+
+      await targetMember.timeout(minutes * 60 * 1000, reason);
+      await botLog(interaction.guild, `⏳ **${targetUser.tag}** di-timeout ${minutes} menit oleh ${interaction.user.tag}. Alasan: ${reason}`);
+      return interaction.reply({
+        embeds: [makeEmbed("⏳ Member Di-Timeout", `**Member:** <@${targetUser.id}> (${targetUser.tag})\n**Durasi:** ${minutes} menit\n**Moderator:** <@${interaction.user.id}>\n**Alasan:** ${reason}`, 0xf39c12)],
+      });
+    }
+
+    // /warn
+    if (commandName === "warn") {
+      if (!isStaffMember(interaction)) {
+        return interaction.reply({ content: "❌ Command ini hanya untuk Staff / Moderator.", flags: MessageFlags.Ephemeral });
+      }
+      const targetUser = interaction.options.getUser("target");
+      const reason = interaction.options.getString("alasan");
+
+      try {
+        await targetUser.send(`⚠️ **Peringatan Resmi dari Server ${interaction.guild.name}:**\nAlasan: ${reason}`);
+      } catch {}
+
+      await botLog(interaction.guild, `⚠️ **${targetUser.tag}** diberi peringatan oleh ${interaction.user.tag}. Alasan: ${reason}`);
+      return interaction.reply({
+        embeds: [makeEmbed("⚠️ Peringatan Diberikan", `**Member:** <@${targetUser.id}> (${targetUser.tag})\n**Moderator:** <@${interaction.user.id}>\n**Alasan:** ${reason}`, 0xf1c40f)],
+      });
     }
 
     // Protected commands: Bot Owner & Administrator only

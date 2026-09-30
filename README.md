@@ -25,17 +25,37 @@ Mendukung semua tema: **Gaming & Esports, Akademik / Kampus, Streamer / Content 
 
 ---
 
-## 📋 Daftar Slash Command
+## 📋 Daftar Slash Command (All-in-One Suite)
 
-| Command | Parameter | Fungsi | Izin |
-|---|---|---|---|
-| `/generate` | `deskripsi` | Merancang template server baru dengan AI | Bot Owner & Administrator |
-| `/revise` | `kode`, `feedback` | Merevisi template yang sudah ada dengan catatan spesifik | Bot Owner & Administrator |
-| `/setup` | `kode` | Menampilkan pratinjau & tombol apply ke server | Bot Owner & Administrator |
-| `/clear-setup` | `kode` | Menghapus channel, role, dan auto-mod milik template | Bot Owner & Administrator |
-| `/templates` | - | Melihat daftar template yang tersimpan | Bot Owner & Administrator |
-| `/delete-template` | `kode` | Menghapus template dari penyimpanan bot (dukung `kode:all`) | Bot Owner & Administrator |
-| `/bots` | - | Menampilkan bot rekomendasi 24/7 & panduan setup | Semua Member |
+### 🤖 AI Assistant & Utility (Semua Member)
+| Command | Parameter | Fungsi |
+|---|---|---|
+| `/ask` | `pertanyaan` | Tanya AI Raviel tentang kodingan, gaming, info, tugas, atau hal umum |
+| `/ping` | - | Cek latensi WebSocket dan respon Discord API bot |
+| `/serverinfo` | - | Tampilkan info, statistik member, channel, dan boost level server |
+| `/userinfo` | `target` (opsional) | Tampilkan info profil akun Discord, role, dan tanggal join |
+| `/remind` | `menit`, `pesan` | Pasang alarm pengingat otomatis (via DM/mention) |
+| `/bots` | - | Menampilkan bot rekomendasi 24/7 & panduan setup |
+
+### 🛡️ Moderasi & Staff Suite (Moderator / Staff)
+| Command | Parameter | Fungsi |
+|---|---|---|
+| `/say` | `pesan`, `channel` (opsional) | Kirim pesan / pengumuman resmi atas nama bot |
+| `/purge` | `jumlah` (1-100) | Bersihkan pesan massal di channel |
+| `/kick` | `target`, `alasan` (opsional) | Keluarkan member dari server |
+| `/ban` | `target`, `alasan` (opsional) | Ban member dari server |
+| `/timeout` | `target`, `menit`, `alasan` (opsional) | Mute / timeout sementara member |
+| `/warn` | `target`, `alasan` | Beri peringatan resmi ke member (+ log staff) |
+
+### ⚙️ Template & Server Architect (Owner & Administrator)
+| Command | Parameter | Fungsi |
+|---|---|---|
+| `/generate` | `deskripsi` | Merancang template server baru dengan AI |
+| `/revise` | `kode`, `feedback` | Merevisi template yang sudah ada dengan catatan spesifik |
+| `/setup` | `kode` | Menampilkan pratinjau & tombol apply ke server |
+| `/clear-setup` | `kode` | Menghapus channel, role, dan auto-mod milik template |
+| `/templates` | - | Melihat daftar template yang tersimpan |
+| `/delete-template` | `kode` | Menghapus template dari penyimpanan bot (dukung `kode:all`) |
 
 ---
 
