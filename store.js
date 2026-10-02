@@ -19,22 +19,34 @@ export function saveTemplate(template, description) {
 }
 
 export function loadTemplate(code) {
-  const file = join(TEMPLATES_DIR, `${code.toUpperCase()}.json`);
+  if (!code || typeof code !== "string") return null;
+  const file = join(TEMPLATES_DIR, `${code.trim().toUpperCase()}.json`);
   if (!existsSync(file)) return null;
-  return JSON.parse(readFileSync(file, "utf8"));
+  try {
+    return JSON.parse(readFileSync(file, "utf8"));
+  } catch (_) {
+    return null;
+  }
 }
 
 export function deleteTemplate(code) {
-  if (code.toUpperCase() === "ALL") {
+  if (!code || typeof code !== "string") return false;
+  if (code.trim().toUpperCase() === "ALL") {
     if (!existsSync(TEMPLATES_DIR)) return 0;
     const files = readdirSync(TEMPLATES_DIR).filter((f) => f.endsWith(".json"));
-    for (const f of files) unlinkSync(join(TEMPLATES_DIR, f));
+    for (const f of files) {
+      try { unlinkSync(join(TEMPLATES_DIR, f)); } catch (_) {}
+    }
     return files.length;
   }
-  const file = join(TEMPLATES_DIR, `${code.toUpperCase()}.json`);
+  const file = join(TEMPLATES_DIR, `${code.trim().toUpperCase()}.json`);
   if (!existsSync(file)) return false;
-  unlinkSync(file);
-  return true;
+  try {
+    unlinkSync(file);
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 export function listTemplates() {

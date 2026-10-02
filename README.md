@@ -127,11 +127,35 @@ NINEROUTER_KEY=sk-xxxx
 AI_MODEL=ag/gemini-3.8-flash
 ```
 
-### 4. Menjalankan Bot
-```bash
-# Register slash commands
-node deploy-commands.js
+### 4. Menjalankan Bot di VPS / Background 24/7
 
-# Jalankan bot
-node index.js
+Gunakan script manajemen bawaan `./bot.sh` untuk kontrol praktis di terminal VPS:
+
+```bash
+# Beri izin eksekusi sekali saja
+chmod +x bot.sh
+
+# Register slash commands ke Discord
+./bot.sh deploy
+
+# Jalankan di background 24/7 (aman close terminal SSH)
+./bot.sh start
+
+# Cek status bot & pemakaian RAM
+./bot.sh status
+
+# Pantau log realtime (Ctrl+C untuk keluar, bot tidak akan mati)
+./bot.sh log
+
+# Hentikan atau restart bot
+./bot.sh stop
+./bot.sh restart
 ```
+
+Atau menggunakan **PM2**:
+```bash
+npm install -g pm2
+pm2 start ecosystem.config.cjs
+```
+
+> 📖 **Panduan Lengkap VPS:** Baca [VPS_GUIDE.md](VPS_GUIDE.md) untuk panduan konfigurasi swap, pm2, dan auto-start systemd pada VPS RAM 1 GB.

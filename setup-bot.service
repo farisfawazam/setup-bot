@@ -1,0 +1,18 @@
+[Unit]
+Description=Setup Bot - Discord Template Architect 24/7
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/setup-bot
+ExecStart=/usr/bin/node index.js
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+
+# Memory safety limit for 1GB RAM VPS
+MemoryMax=300M
+
+[Install]
+WantedBy=multi-user.target

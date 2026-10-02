@@ -189,18 +189,23 @@ async function chat(systemPrompt, userMessage) {
   const headers = { "Content-Type": "application/json" };
   if (NINEROUTER_KEY) headers["Authorization"] = `Bearer ${NINEROUTER_KEY}`;
 
-  const res = await fetch(`${NINEROUTER_URL}/v1/chat/completions`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage },
-      ],
-      stream: false,
-    }),
-  });
+  let res;
+  try {
+    res = await fetch(`${NINEROUTER_URL}/v1/chat/completions`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        model: MODEL,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMessage },
+        ],
+        stream: false,
+      }),
+    });
+  } catch (err) {
+    throw new Error(`Koneksi AI gagal (${NINEROUTER_URL}): ${err.message}. Pastikan 9Router / AI server aktif.`);
+  }
 
   if (!res.ok) {
     const err = await res.text();
@@ -209,6 +214,16 @@ async function chat(systemPrompt, userMessage) {
 
   const data = await res.json();
   return data.choices[0].message.content.trim();
+}
+
+function extractJSON(text) {
+  const cleaned = text.replace(/^```(?:json)?\s*/gi, "").replace(/\s*```$/gi, "").trim();
+  const firstBrace = cleaned.indexOf("{");
+  const lastBrace = cleaned.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace < lastBrace + 1 && lastBrace > firstBrace) {
+    return cleaned.slice(firstBrace, lastBrace + 1);
+  }
+  return cleaned;
 }
 
 function sanitize(template) {
@@ -437,13 +452,13 @@ export async function generateTemplate(description, onProgress) {
   );
 
   if (onProgress) onProgress("⚙️ AI sedang generate template & category-sync layout...");
-  let content = await chat(
+  const content = await chat(
     GENERATOR_SYSTEM,
     `Ini brief dari architect, generate template JSON lengkap:\n\n${brief}`
   );
 
-  content = content.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");
-  const template = sanitize(JSON.parse(content));
+  const jsonStr = extractJSON(content);
+  const template = sanitize(JSON.parse(jsonStr));
   return { template, brief };
 }
 
@@ -451,9 +466,9 @@ export async function reviseTemplate(existingTemplate, feedback, onProgress) {
   if (onProgress) onProgress("🧠 AI sedang mempelajari template & feedback revisi...");
   const userMessage = `Template saat ini:\n${JSON.stringify(existingTemplate, null, 2)}\n\nFeedback / Permintaan revisi:\n"${feedback}"\n\nGenerate JSON template hasil revisi.`;
 
-  let content = await chat(REVISE_SYSTEM, userMessage);
-  content = content.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");
-  const template = sanitize(JSON.parse(content));
+  const content = await chat(REVISE_SYSTEM, userMessage);
+  const jsonStr = extractJSON(content);
+  const template = sanitize(JSON.parse(jsonStr));
   return { template };
 }
 

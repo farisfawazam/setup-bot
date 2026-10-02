@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node index.js",
     "deploy": "node deploy-commands.js",
-    "stop": "if exist bot.pid (for /f %i in (bot.pid) do taskkill /F /PID %i 2>nul) & del bot.pid"
+    "test": "node test-perms.js && node test-core.js",
+    "stop": "node -e \"import('fs').then(fs => { if (fs.existsSync('bot.pid')) { const pid = fs.readFileSync('bot.pid', 'utf8').trim(); try { process.kill(Number(pid)); } catch(e) {} fs.unlinkSync('bot.pid'); } })\""
   },
   "dependencies": {
     "discord.js": "^14.18.0",

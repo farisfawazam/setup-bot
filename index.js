@@ -7,9 +7,21 @@ import {
 } from "discord.js";
 import "dotenv/config";
 import http from "http";
+import fs from "fs";
 import { generateTemplate, reviseTemplate, askAI } from "./ai.js";
 import { saveTemplate, loadTemplate, listTemplates, deleteTemplate } from "./store.js";
 import { botsEmbed, companionBotEmbed, companionBotActionRow, carlBotGuideEmbed } from "./bots.js";
+
+// Write PID for background running and process control
+fs.writeFileSync("bot.pid", String(process.pid));
+const cleanupPid = () => {
+  try {
+    if (fs.existsSync("bot.pid")) fs.unlinkSync("bot.pid");
+  } catch (_) {}
+};
+process.on("exit", cleanupPid);
+process.on("SIGINT", () => { cleanupPid(); process.exit(0); });
+process.on("SIGTERM", () => { cleanupPid(); process.exit(0); });
 
 const client = new Client({
   intents: [
@@ -169,7 +181,7 @@ async function applyTemplate(guild, template, onProgress) {
     }
     const role = await guild.roles.create({
       name: roleDef.name,
-      colors: { primaryColor: parseColor(roleDef.color) },
+      color: parseColor(roleDef.color),
       hoist: roleDef.hoist ?? false,
       permissions: perms,
       reason: "Setup Bot",
@@ -193,7 +205,7 @@ async function applyTemplate(guild, template, onProgress) {
       }
       const role = await guild.roles.create({
         name: r.name,
-        colors: { primaryColor: parseColor(r.color) },
+        color: parseColor(r.color),
         hoist: false,
         permissions: new PermissionsBitField(),
         reason: "Setup Bot self-role",
@@ -1568,21 +1580,24 @@ client.on("interactionCreate", async (interaction) => {
       return;
     }
 
-    // /bots
-    if (commandName === "bots") {
-      await interaction.reply({ embeds: [botsEmbed()] });
-      return;
-    }
-
   } catch (err) {
-    console.error(err);
+    console.error("Interaction error:", err);
     if (err.code === 10062) return;
     try {
       const msg = `❌ Error: ${(err.message || "Unknown").slice(0, 200)}`;
-      if (interaction.replied || interaction.deferred) await interaction.editReply(msg).catch(() => {});
-      else await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral }).catch(() => {});
+      if (interaction.replied || interaction.deferred) {
+        await interaction.editReply({ content: msg, embeds: [], components: [] }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral }).catch(() => {});
+      }
     } catch (_) {}
   }
 });
+
+if (!process.env.DISCORD_TOKEN) {
+  console.error("❌ ERROR: DISCORD_TOKEN tidak ditemukan di file .env!");
+  console.error("ℹ️ Silakan isi DISCORD_TOKEN di file .env sebelum menjalankan bot.");
+  process.exit(1);
+}
 
 client.login(process.env.DISCORD_TOKEN);

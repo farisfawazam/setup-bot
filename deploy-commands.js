@@ -119,8 +119,19 @@ const commands = [
     .toJSON(),
 ];
 
+if (!process.env.DISCORD_TOKEN) {
+  console.error("❌ ERROR: DISCORD_TOKEN tidak ditemukan di file .env!");
+  console.error("ℹ️ Silakan isi DISCORD_TOKEN di file .env sebelum menjalankan deploy.");
+  process.exit(1);
+}
+
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);
-const app = await rest.get(Routes.oauth2CurrentApplication());
-console.log(`Deploying ${commands.length} command(s) for ${app.name}...`);
-await rest.put(Routes.applicationCommands(app.id), { body: commands });
-console.log("Done deploying all-in-one commands!");
+try {
+  const app = await rest.get(Routes.oauth2CurrentApplication());
+  console.log(`Deploying ${commands.length} command(s) for ${app.name}...`);
+  await rest.put(Routes.applicationCommands(app.id), { body: commands });
+  console.log("✅ Done deploying all-in-one commands!");
+} catch (err) {
+  console.error("❌ Gagal deploy command:", err.message);
+  process.exit(1);
+}
